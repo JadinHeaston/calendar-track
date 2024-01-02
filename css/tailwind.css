@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	@apply flex flex-col items-center justify-between h-screen max-h-screen w-full text-black bg-white dark:text-white dark:bg-black;
+}
+
+a {
+	@apply text-blue-400 hover:text-blue-600 delay-100;
+}
+
+header {
+	@apply w-full text-2xl text-center text-black bg-gray-100 dark:text-white dark:bg-gray-900;
+}
+
+main {
+	@apply w-full grow flex flex-col max-h-full;
+}
+
+#calendar-name-header {
+	@apply w-full text-center text-2xl;
+}
+
+#current-time {
+	@apply text-center text-xl mb-2;
+}
+
+#calendar-selection {
+	@apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
+
+#calendar,
+#weather {
+	@apply grow w-full text-center rounded-lg p-4;
+}
+
+.event-day-header {
+	@apply text-lg mt-4;
+}
+
+.cal-event {
+	@apply flex items-center bg-gray-100 dark:bg-gray-900;
+}
+
+.cal-times {
+	@apply flex flex-col justify-center items-center mr-4;
+}
+
+.cal-start {
+	@apply text-xl;
+}
+
+.cal-end {
+	@apply text-lg;
+}
+
+#event-header {
+	@apply text-3xl;
+}
+
+#weather-header {
+	@apply text-3xl;
+}
+
+/* Table Styling */
+table {
+	@apply bg-gray-100 dark:bg-gray-900;
+}
+
+table,
+th,
+td {
+	@apply border border-current;
+}

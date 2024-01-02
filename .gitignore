@@ -1,0 +1,9 @@
+/includes/config.php
+/js/scripts.js
+/node_modules/**
+/css/tailwind_output.css
+.env
+/cache/**
+/assets/weather/**
+
+/docker/php/php.ini

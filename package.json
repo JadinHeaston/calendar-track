@@ -1,0 +1,9 @@
+{
+	"dependencies": {},
+	"devDependencies": {
+		"tailwindcss": "^3.4.0"
+	},
+	"scripts": {
+		"build": "tsc && npx tailwindcss -i ./css/tailwind.css -o ./css/tailwind_output.css"
+	}
+}
