@@ -28,7 +28,7 @@ Singular Build: `npm run build`
 
 ### The Stack
 
-[PHP](https://www.php.net/) + [HTMX](https://htmx.org/) + [TailwindCSS](https://tailwindcss.com/) + [MariaDB](https://mariadb.com/)  
+[PHP](https://www.php.net/) + [htmx](https://htmx.org/) + [TailwindCSS](https://tailwindcss.com/) + [MariaDB](https://mariadb.com/)  
 (Plus [NGINX](https://nginx.org/) as a reverse proxy.)  
 (and [phpMyAdmin](https://www.phpmyadmin.net/) for ease of development.)
 
@@ -36,6 +36,14 @@ Singular Build: `npm run build`
 
 ???
 
-## Shout-Outs
+## Shout-Outs ("Vendors")
 
-[Remix Icon](https://github.com/Remix-Design/RemixIcon) - Not used yet...
+No vendor work was modified, and all licensing is handled by the respective project.
+A copy of each license is also avaiable in the [LICENSES](/LICENSES/) folder.
+
+- [htmx](https://htmx.org/) - Front-end interactivity.
+	- [BSD 2 Clause](https://opensource.org/license/bsd-2-clause/)
+- [PHP ICS Parser](https://github.com/u01jmg3/ics-parser) - ICS Parsing and general handling.
+	- [MIT](https://opensource.org/license/mit/)
+- [Remix Icon](https://github.com/Remix-Design/RemixIcon) - Icons (Not used yet)
+	- [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
