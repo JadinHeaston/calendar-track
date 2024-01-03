@@ -13,7 +13,7 @@ echo <<<HTML
 	<main>
 	HTML;
 
-if (sizeof($calendars) === 1)
+if ($id !== 0 & sizeof($calendars) === 1)
 {
 	$calendar = $calendars[0];
 	unset($calendars);
