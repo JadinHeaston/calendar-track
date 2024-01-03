@@ -1,7 +1,6 @@
 <?php
 //Loader, with varying connection that lacks database specification.
 require_once(__DIR__ . '/../includes/config.php');
-require_once(__DIR__ . '/../includes/enumerators.php');
 require_once(__DIR__ . '/../includes/globals.php');
 require_once(__DIR__ . '/../includes/functions.php');
 require_once(__DIR__ . '/../includes/models.php');
