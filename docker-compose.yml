@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   proxy:
-    container_name: rt-proxy
+    container_name: ct-proxy
     image: nginx:mainline-alpine3.18-slim
     ports:
       - ${PORT:-3589}:80
@@ -18,7 +18,7 @@ services:
       - mariadb
 
   php:
-    container_name: rt-php
+    container_name: ct-php
     build: './docker/php'
     volumes:
       - ./:/var/www/html
@@ -31,13 +31,13 @@ services:
       - mariadb
 
   phpmyadmin:
-    container_name: rt-phpmyadmin
+    container_name: ct-phpmyadmin
     image: phpmyadmin/phpmyadmin:latest
     ports:
       - 8000:80
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOST=rt-mariadb
+      - PMA_HOST=ct-mariadb
       - TZ=${TIMEZONE:-America/Chicago}
     networks:
       - internal
@@ -45,11 +45,11 @@ services:
       - mariadb
 
   mariadb:
-    container_name: rt-mariadb
+    container_name: ct-mariadb
     image: mariadb:latest
     restart: always
     volumes:
-      - rt-mariadb-data:/var/lib/mysql
+      - ct-mariadb-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=DevelopmentPassword
       - TZ=${TIMEZONE:-America/Chicago}
@@ -57,7 +57,7 @@ services:
       - internal
 
 volumes:
-  rt-mariadb-data:
+  ct-mariadb-data:
 
 
 networks:

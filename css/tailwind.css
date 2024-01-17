@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-	@apply flex flex-col items-center justify-between h-screen max-h-screen w-full text-black bg-white dark:text-white dark:bg-black;
+	@apply flex flex-col items-center justify-between h-screen max-h-screen w-full text-black bg-white dark:text-white dark:bg-black bg-opacity-70 dark:bg-opacity-70;
 }
 
 a {
@@ -15,52 +15,67 @@ header {
 }
 
 main {
-	@apply w-full grow flex flex-col max-h-full;
+	@apply w-full grow flex flex-col max-h-full items-center;
 }
 
 #calendar-name-header {
-	@apply w-full text-center text-2xl;
+	@apply text-2xl;
 }
 
 #current-time {
-	@apply text-center text-xl mb-2;
+	@apply text-xl mb-2;
 }
 
 #calendar-selection {
 	@apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
 }
 
-#calendar,
-#weather {
+#calendar {
 	@apply grow w-full text-center rounded-lg p-4;
 }
 
-.event-day-header {
+#calendar .event-day {
+	@apply w-3/4 mx-auto;
+}
+
+#calendar .event-day-header {
 	@apply text-lg mt-4;
 }
 
-.cal-event {
-	@apply flex items-center bg-gray-100 dark:bg-gray-900;
+#calendar .cal-event:first-of-type {
+	@apply rounded-t-lg;
 }
 
-.cal-times {
-	@apply flex flex-col justify-center items-center mr-4;
+#calendar .cal-event:last-of-type {
+	@apply rounded-b-lg;
 }
 
-.cal-start {
+#calendar .cal-event {
+	@apply flex items-center p-2 border border-current border-opacity-0 bg-gray-100 dark:bg-gray-900;
+}
+
+#calendar .cal-times {
+	@apply mr-4;
+}
+
+#calendar .cal-start {
 	@apply text-xl;
 }
 
-.cal-end {
-	@apply text-lg;
+#calendar .cal-end {
+	@apply text-xl;
 }
 
 #event-header {
 	@apply text-3xl;
 }
 
-#weather-header {
-	@apply text-3xl;
+#weather {
+	@apply absolute w-full -bottom-0 h-40 grid grid-cols-7 border-current border-t rounded-t-lg;
+}
+
+#weather .weather-group {
+	@apply border-current border-l border-r;
 }
 
 /* Table Styling */

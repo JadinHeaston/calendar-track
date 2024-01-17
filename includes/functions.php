@@ -23,9 +23,9 @@ function getICSEventData(int $id, string $icsLink)
 	}
 	else //No valid file to use. Download it.
 	{
-		$ICSData = curlContent($icsLink);
-		file_put_contents($filename, $ICSData);
-		$icalHandle->initString($ICSData);
+		$icsData = curlContent($icsLink);
+		file_put_contents($filename, $icsData);
+		$icalHandle->initString($icsData);
 	}
 
 	return $icalHandle->eventsFromInterval(UI_DAY_RANGE . ' days');
@@ -38,11 +38,11 @@ function getCachedICSLastModificationTime(int $id)
 	return $dt->setTimestamp(filectime('./cache/calendars/' . $id . '.ics'));
 }
 
-function curlContent(string $URL)
+function curlContent(string $url)
 {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_URL, $URL);
+	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_USERAGENT, MISC_USER_AGENT);
 	$data = curl_exec($ch);
 	curl_close($ch);

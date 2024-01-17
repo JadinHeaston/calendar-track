@@ -27,7 +27,6 @@ if ($id !== 0 & sizeof($calendars) === 1)
 	echo <<<HTML
 		<h2 id="calendar-name-header">{$calendar['name']}</h2>
 		<h3 id="current-time">{$mainHeaderCurrentDatetime}</h3>
-		<div class="flex">
 		HTML;
 
 	$events = getICSEventData(intval($calendar['id']), $calendar['ics_link']);
@@ -42,11 +41,11 @@ if ($id !== 0 & sizeof($calendars) === 1)
 
 	$icalFunctions = new Ical\ICal();
 
-	$currentDay = Date('Y-m-d');
+	$currentDay = null;
 	/**
-	 *  @var ICal\Event 
+	 *  @var ICal\Event
 	 */
-	foreach ($events as &$event)
+	foreach ($events as $key => &$event)
 	{
 		$dtstart = $icalFunctions->iCalDateToDateTime($event->dtstart_array[3]);
 		$dtend = $icalFunctions->iCalDateToDateTime($event->dtend_array[3]);
@@ -54,8 +53,17 @@ if ($id !== 0 & sizeof($calendars) === 1)
 		{
 			//Starting new container and displaying day header.
 			$currentDay = $dtstart->format('Y-m-d');
+			if ($key > 0)
+			{
+				//Closing previous event-day containers.
+				echo <<<HTML
+					</div>
+					HTML;
+			}
+
 			echo <<<HTML
-				<h4 class="event-day-header">{$dtstart->format(UI_DATE_EVENT_HEADER)}</h4>
+				<div class="event-day">
+					<h4 class="event-day-header">{$dtstart->format(UI_DATE_EVENT_HEADER)}</h4>
 				HTML;
 		}
 
@@ -63,12 +71,19 @@ if ($id !== 0 & sizeof($calendars) === 1)
 		echo <<<HTML
 			<div class="cal-event">
 				<div class="cal-times">
-					<p class="cal-start">{$dtstart->format(UI_DATE_EVENT_TIME)}</p>
-					<p class="cal-end">{$dtend->format(UI_DATE_EVENT_TIME)}</p>
+					<p>{$dtstart->format(UI_DATE_EVENT_TIME)} - {$dtend->format(UI_DATE_EVENT_TIME)}</p>
 				</div>
 				<div class="cal-info">
 					<p class="cal-summary">{$event->summary}</p>
 				</div>
+			</div>
+			HTML;
+	}
+
+	if (!empty($events))
+	{
+		//Closing last event-day container.
+		echo <<<HTML
 			</div>
 			HTML;
 	}
@@ -82,10 +97,10 @@ if ($id !== 0 & sizeof($calendars) === 1)
 	{
 		//Weather
 		echo <<<HTML
-		<div id="weather" hx-trigger="load queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
-			<h3 id="weather-header">Weather</h3>
-		</div>
-		HTML;
+			<div id="weather" hx-trigger="load queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
+				<h3 id="weather-header">Weather</h3>
+			</div>
+			HTML;
 	}
 	//Closing container div.
 	echo <<<HTML

@@ -46,7 +46,7 @@ if ($_SESSION['authenticated'] === true)
 
 	//Getting all calendars.
 	$calendars = $connection->getCalendar(intval($_GET['id']));
-	if ($calendars === false || sizeof($calendars) === 0)
+	if ($calendars === false || empty($calendars))
 	{
 		echo 'No calendars found. :(';
 		exit();
@@ -85,7 +85,7 @@ if ($_SESSION['authenticated'] === true)
 	{
 		//Getting all calendars.
 		$calendars = $connection->getCalendar();
-		if ($calendars === false || sizeof($calendars) === 0)
+		if ($calendars === false || empty($calendars))
 		{
 			echo 'No calendars found. :(';
 			exit();

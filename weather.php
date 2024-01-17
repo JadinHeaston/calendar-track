@@ -43,48 +43,32 @@ function parseWeatherData(object $weatherData)
 		else
 			$weatherPeriod->temperatureTrend = ' (' . $weatherPeriod->temperatureTrend . ')';
 		// $icon = WEATHER_ICONS[($weatherPeriod->isDaytime === true ? 'Day' : 'Night')][$weatherPeriod->shortForecast];
-		if ($weatherPeriod->name === $previousDayName . ' Night' || $weatherPeriod->name === 'Tonight')
+		if ($previousDayName !== '' && $weatherPeriod->name !== $previousDayName . ' Night')
 		{
+			// next day. Close group.
 			$weatherHTML .= <<<HTML
-				<div class="weather-night flex flex-col justify-between items-center">
-					<h5>Night</h5>
-					<!-- <div class="flex justify-between items-center"> -->
-						<div class="weather-information w-full h-full text-left flex flex-col items-start justify-between p-4">
-							<div class="weather-temperature"><span class="text-lg font-bold">Temperature:</span> {$weatherPeriod->temperature}{$weatherPeriod->temperatureUnit}{$weatherPeriod->temperatureTrend}</div>
-							<div class="weather-humidity"><span class="text-lg font-bold">Humidity:</span> {$weatherPeriod->relativeHumidity->value}%</div>
-							<div class="weather-wind"><span class="text-lg font-bold">Wind:</span> {$weatherPeriod->windSpeed} ({$weatherPeriod->windDirection})</div>
-							<div class="weather-forecast"><span class="text-lg font-bold">Forecast:</span> {$weatherPeriod->detailedForecast} ({$weatherPeriod->shortForecast})</div>
-						</div>
-						<!-- <div class="weather-icon"><img src="{$weatherPeriod->icon}"/></div> -->
-					<!-- </div> -->
 				</div>
 				HTML;
 		}
+		$weatherHTML .= <<<HTML
+			<div class="weather-group bg-gray-100 dark:bg-gray-900">
+			HTML;
+		if ($weatherPeriod->name === $previousDayName . ' Night' || $weatherPeriod->name === 'Tonight')
+			$time = 'night';
 		else
-		{
-			if ($previousDayName !== '' && $weatherPeriod->name !== $previousDayName . ' Night')
-			{
-				$weatherHTML .= <<<HTML
-					</div>
-					HTML;
-			}
-			$weatherHTML .= <<<HTML
-				<h4 class="text-xl mt-4">{$weatherPeriod->name}</h4>
-				<div class="weather-group grid grid-cols-2 p-4 bg-gray-100 dark:bg-gray-900">
-					<div class="weather-day flex flex-col justify-between items-center">
-						<h5>Day</h5>
-						<!-- <div class="flex justify-between items-center"> -->
-							<div class="weather-information w-full h-full text-left flex flex-col items-start justify-between p-4">
-								<div class="weather-temperature"><span class="text-lg font-bold">Temperature:</span> {$weatherPeriod->temperature}{$weatherPeriod->temperatureUnit}{$weatherPeriod->temperatureTrend}</div>
-								<div class="weather-humidity"><span class="text-lg font-bold">Humidity:</span> {$weatherPeriod->relativeHumidity->value}%</div>
-								<div class="weather-wind"><span class="text-lg font-bold">Wind:</span> {$weatherPeriod->windSpeed} ({$weatherPeriod->windDirection})</div>
-								<div class="weather-forecast"><span class="text-lg font-bold">Forecast:</span> {$weatherPeriod->detailedForecast} ({$weatherPeriod->shortForecast})</div>
-							</div>
-							<!-- <div class="weather-icon"><img src="{$weatherPeriod->icon}"/></div> -->
-						<!-- </div> -->
-					</div>
-				HTML;
-		}
+			$time = 'day';
+		$weatherHTML .= <<<HTML
+			<div class="weather-{$time}">
+				<h5>{$time}</h5>
+				<div class="weather-information">
+					<div class="weather-temperature"><span class="text-lg font-bold">Temperature:</span> {$weatherPeriod->temperature}{$weatherPeriod->temperatureUnit}{$weatherPeriod->temperatureTrend}</div>
+					<div class="weather-humidity"><span class="text-lg font-bold">Humidity:</span> {$weatherPeriod->relativeHumidity->value}%</div>
+					<div class="weather-wind"><span class="text-lg font-bold">Wind:</span> {$weatherPeriod->windSpeed} ({$weatherPeriod->windDirection})</div>
+					<div class="weather-forecast"><span class="text-lg font-bold">Forecast:</span> {$weatherPeriod->detailedForecast} ({$weatherPeriod->shortForecast})</div>
+				</div>
+				<!-- <div class="weather-icon"><img src="{$weatherPeriod->icon}"/></div> -->
+			</div>
+			HTML;
 		$previousDayName = $weatherPeriod->name;
 	}
 
@@ -95,8 +79,8 @@ $currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properti
 
 echo <<<HTML
 	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
-		<h3 id="weather-header">Weather</h3>
-		<p>({$currentUpdateTime})</p>
+		<!-- <h3 id="weather-header">Weather</h3>
+		<p>({$currentUpdateTime})</p> -->
 		{$weatherHTML}
 	</div>
 	HTML;
