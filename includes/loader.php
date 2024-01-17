@@ -1,4 +1,5 @@
 <?PHP
+ini_set('memory_limit', '256M');
 require_once(__DIR__ . '/config.php');
 require_once(__DIR__ . '/globals.php');
 require_once(__DIR__ . '/functions.php');

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-	@apply flex flex-col items-center justify-between h-screen max-h-screen w-full text-black bg-white dark:text-white dark:bg-black bg-opacity-70 dark:bg-opacity-70;
+	@apply flex flex-col items-center justify-between min-h-screen w-full text-black bg-white dark:text-white dark:bg-black bg-opacity-70 dark:bg-opacity-70;
 }
 
 a {

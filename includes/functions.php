@@ -17,7 +17,7 @@ function getICSEventData(int $id, string $icsLink)
 	$filename = './cache/calendars/' . $id . '.ics';
 
 	//If file exists and is within the timeout range.
-	if (file_exists($filename) && time() - filectime($filename) < FSCACHE_WEATHER_CACHE_PERIOD)
+	if (file_exists($filename) && time() - filectime($filename) < FSCACHE_ICAL_CACHE_PERIOD)
 	{
 		$icalHandle->initFile($filename);
 	}
