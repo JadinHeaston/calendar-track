@@ -52,7 +52,7 @@ if ($_SESSION['authenticated'] === true)
 		exit();
 	}
 
-	if (isset($_GET['action']) && $_GET['action'] !== '' && sizeof($calendars) === 1)
+	if (isset($_GET['action']) && $_GET['action'] !== '' && count($calendars) === 1)
 	{
 		$calendar = $calendars[0];
 		unset($calendars);
