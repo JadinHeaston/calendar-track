@@ -24,10 +24,13 @@ if ($id !== 0 & sizeof($calendars) === 1)
 	$weatherUpdateRate = UI_WEATHER_UPDATE_RATE;
 
 	//Main Header
-	echo <<<HTML
+	if (UI_DISPLAY_CALENDAR_HEADER === true)
+	{
+		echo <<<HTML
 		<h2 id="calendar-name-header">{$calendar['name']}</h2>
 		<h3 id="current-time">{$mainHeaderCurrentDatetime}</h3>
 		HTML;
+	}
 
 	$events = getICSEventData(intval($calendar['id']), $calendar['ics_link']);
 	$eventsLastUpdatedTime = getCachedICSLastModificationTime(intval($calendar['id']));
@@ -35,9 +38,15 @@ if ($id !== 0 & sizeof($calendars) === 1)
 	//Calendar
 	echo <<<HTML
 		<div id="calendar" hx-trigger="click queue:none, every {$calendarUpdateRate}s queue:none" hx-get="" hx-select="#calendar" hx-target="#calendar" hx-swap="outerHTML">
+		HTML;
+
+	if (UI_DISPLAY_EVENT_HEADER === true)
+	{
+		echo <<<HTML
 			<h3 id="event-header">Events</h3>
 			<p>({$eventsLastUpdatedTime->format(UI_DATE_GROUP_HEADER)})</p>
-		HTML;
+			HTML;
+	}
 
 	$icalFunctions = new Ical\ICal();
 
@@ -49,6 +58,9 @@ if ($id !== 0 & sizeof($calendars) === 1)
 	{
 		$dtstart = $icalFunctions->iCalDateToDateTime($event->dtstart_array[3]);
 		$dtend = $icalFunctions->iCalDateToDateTime($event->dtend_array[3]);
+		$dtend->setTimezone(new DateTimeZone(date_default_timezone_get()));
+		$dtstart->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
 		if ($currentDay !== $dtstart->format('Y-m-d'))
 		{
 			//Starting new container and displaying day header.
@@ -71,7 +83,7 @@ if ($id !== 0 & sizeof($calendars) === 1)
 		echo <<<HTML
 			<div class="cal-event">
 				<div class="cal-times">
-					<p>{$dtstart->format(UI_DATE_EVENT_TIME)} - {$dtend->format(UI_DATE_EVENT_TIME)}</p>
+					<span>{$dtstart->format(UI_DATE_EVENT_TIME)}</span><span>-</span><span>{$dtend->format(UI_DATE_EVENT_TIME)}</span>
 				</div>
 				<div class="cal-info">
 					<p class="cal-summary">{$event->summary}</p>

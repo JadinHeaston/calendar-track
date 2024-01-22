@@ -10,6 +10,7 @@ function getICSEventData(int $id, string $icsLink)
 {
 	require_once(__DIR__ . '/../vendor/ICal_loader.php');
 	$icalHandle = new Ical\ICal();
+	$icalHandle->disableCharacterReplacement = true;
 	$icalHandle->filterDaysBefore = 0;
 	$icalHandle->filterDaysAfter = UI_DAY_RANGE;
 
