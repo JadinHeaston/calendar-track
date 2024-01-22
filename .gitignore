@@ -5,5 +5,5 @@
 .env
 /cache/**
 /assets/weather/**
-
+/assets/custom_logos/**
 /docker/php/php.ini
