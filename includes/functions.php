@@ -1,5 +1,4 @@
 <?PHP
-
 function isHTMX()
 {
 	$headers = getallheaders();
@@ -15,18 +14,25 @@ function getICSEventData(int $id, string $icsLink)
 	$icalHandle->filterDaysAfter = UI_DAY_RANGE;
 
 	//Check for file in with this ID in ./cache/calendars/
-	$filename = './cache/calendars/' . $id . '.ics';
+	$filename = './cache/calendars/' . $id . '.phpobj';
 
 	//If file exists and is within the timeout range.
 	if (file_exists($filename) && time() - filectime($filename) < FSCACHE_ICAL_CACHE_PERIOD)
 	{
-		$icalHandle->initFile($filename);
+		$icalHandle = unserialize(file_get_contents($filename));
 	}
 	else //No valid file to use. Download it.
 	{
-		$icsData = curlContent($icsLink);
-		file_put_contents($filename, $icsData);
-		$icalHandle->initString($icsData);
+		try
+		{
+			$icsData = curlContent($icsLink);
+			$icalHandle->initString($icsData);
+		}
+		catch (Exception $error)
+		{
+			$icalHandle = unserialize(file_get_contents($filename));
+		}
+		file_put_contents($filename, serialize($icalHandle));
 	}
 
 	return $icalHandle->eventsFromInterval(UI_DAY_RANGE . ' days');
@@ -36,7 +42,7 @@ function getCachedICSLastModificationTime(int $id)
 {
 	clearstatcache();
 	$dt = new DateTime();
-	return $dt->setTimestamp(filectime('./cache/calendars/' . $id . '.ics'));
+	return $dt->setTimestamp(filectime('./cache/calendars/' . $id . '.phpobj'));
 }
 
 function curlContent(string $url)

@@ -289,3 +289,23 @@ class RTConnector extends DatabaseConnector
 			return false;
 	}
 }
+
+class ScopeTimer
+{
+	public $name;
+	public $startTime;
+
+	function __construct($name = 'Timer')
+	{
+		$this->startTime = microtime(true);
+		$this->name = $name;
+	}
+
+	function __destruct()
+	{
+		$elapsed_time = microtime(true) - $this->startTime;
+		echo $this->name . ': ' . $elapsed_time . 'ms';
+	}
+
+	//timer = new ScopeTimer(__FILE__);
+}

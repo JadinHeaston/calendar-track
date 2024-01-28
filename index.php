@@ -26,9 +26,26 @@ if ($id !== 0 & count($calendars) === 1)
 	//Main Header
 	if (UI_DISPLAY_CALENDAR_HEADER === true)
 	{
+		if (UI_LOGO_CALENDAR_HEADER_PATH !== '')
+		{
+			$calendarHeaderLogo = UI_LOGO_CALENDAR_HEADER_PATH;
+			$calendarHeaderLogoHTML = <<<HTML
+				<div id="calendar-header-logo">
+					<img src="{$calendarHeaderLogo}" alt="Calendar Header Logo">
+				</div>
+				HTML;
+		}
+		else
+			$calendarHeaderLogoHTML = '';
+
 		echo <<<HTML
-		<h2 id="calendar-name-header">{$calendar['name']}</h2>
-		<h3 id="current-time">{$mainHeaderCurrentDatetime}</h3>
+		<div id="calendar-header">
+			<div id="calendar-header-text">
+				<h2 id="calendar-name-header">{$calendar['name']}</h2>
+				<h3 id="current-time">{$mainHeaderCurrentDatetime}</h3>
+			</div>
+			{$calendarHeaderLogoHTML}
+		</div>
 		HTML;
 	}
 
@@ -80,8 +97,16 @@ if ($id !== 0 & count($calendars) === 1)
 		}
 
 		//Display event information.
+		if ($dtstart <= new DateTime && new DateTime <= $dtend)
+		{
+			$eventStatus = 'event-current';
+		}
+		elseif (new DateTime > $dtend)
+			$eventStatus = 'event-past';
+		else
+			$eventStatus = 'event-future';
 		echo <<<HTML
-			<div class="cal-event">
+			<div class="cal-event {$eventStatus}">
 				<div class="cal-times">
 					<span>{$dtstart->format(UI_DATE_EVENT_TIME)}</span><span>-</span><span>{$dtend->format(UI_DATE_EVENT_TIME)}</span>
 				</div>

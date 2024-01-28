@@ -35,41 +35,82 @@ $weatherHTML = parseWeatherData($weatherData);
 function parseWeatherData(object $weatherData)
 {
 	$weatherHTML = '';
-	$previousDayName = '';
+	$time = '';
+	$previousDayTime = null;
+	$weatherIcons = WEATHER_ICONS;
+	$periodCount = 0;
 	foreach ($weatherData->properties->periods as $weatherPeriod)
 	{
-		if ($weatherPeriod->temperatureTrend === null)
-			$weatherPeriod->temperatureTrend = '';
-		else
-			$weatherPeriod->temperatureTrend = ' (' . $weatherPeriod->temperatureTrend . ')';
-		// $icon = WEATHER_ICONS[($weatherPeriod->isDaytime === true ? 'Day' : 'Night')][$weatherPeriod->shortForecast];
-		if ($previousDayName !== '' && $weatherPeriod->name !== $previousDayName . ' Night')
+		if ($periodCount >= 14)
+			continue;
+		if ($weatherPeriod->name === 'Tonight') //Additional period count if it starts at "tonight" to prevent overflow issues.
+			++$periodCount;
+		++$periodCount;
+
+
+		if ($weatherPeriod->isDaytime === true && $previousDayTime !== null)
 		{
 			// next day. Close group.
 			$weatherHTML .= <<<HTML
 				</div>
 				HTML;
 		}
-		$weatherHTML .= <<<HTML
-			<div class="weather-group bg-gray-100 dark:bg-gray-900">
-			HTML;
-		if ($weatherPeriod->name === $previousDayName . ' Night' || $weatherPeriod->name === 'Tonight')
-			$time = 'night';
-		else
+		if ($previousDayTime === null || $weatherPeriod->isDaytime === true)
+		{
+			$weatherHTML .= <<<HTML
+				<div class="weather-group">
+				HTML;
+		}
+		if ($weatherPeriod->isDaytime === true)
 			$time = 'day';
+		else
+			$time = 'night';
+
+		//Creating header, only if it's not a night period. (Can't use $time incase it is "tonight")
+		if (str_contains($weatherPeriod->name, ' Night') === false)
+		{
+			if ($periodCount !== 2)
+				$dayTitleHTML = '<h5>' . substr($weatherPeriod->name, 0, 3) . '</h5>';
+			else
+				$dayTitleHTML = '<h5>' . $weatherPeriod->name . '</h5>';
+		}
+		else
+			$dayTitleHTML = '';
+
+		//Getting period icon name.
+		if (str_contains($weatherPeriod->shortForecast, ' then ') === true)
+			$iconFileName = $weatherIcons[$time][strstr($weatherPeriod->shortForecast, ' then ', true)];
+		else
+			$iconFileName = $weatherIcons[$time][$weatherPeriod->shortForecast];
+
+		// //Formatting temperature trend.
+		// if ($weatherPeriod->temperatureTrend === null)
+		// 	$weatherPeriod->temperatureTrend = '';
+		// else
+		// 	$weatherPeriod->temperatureTrend = ' (' . $weatherPeriod->temperatureTrend . ')';
+		//Formatting wind.
+		$weatherPeriod->windSpeed = str_replace(' to ', '-', strstr($weatherPeriod->windSpeed, ' mph', true));
 		$weatherHTML .= <<<HTML
-			<div class="weather-{$time}">
-				<h5>{$time}</h5>
+			<div class="weather-period weather-{$time}">
+				{$dayTitleHTML}
 				<div class="weather-information">
-					<div class="weather-temperature"><span class="text-lg font-bold">Temperature:</span> {$weatherPeriod->temperature}{$weatherPeriod->temperatureUnit}{$weatherPeriod->temperatureTrend}</div>
-					<div class="weather-humidity"><span class="text-lg font-bold">Humidity:</span> {$weatherPeriod->relativeHumidity->value}%</div>
-					<div class="weather-wind"><span class="text-lg font-bold">Wind:</span> {$weatherPeriod->windSpeed} ({$weatherPeriod->windDirection})</div>
-					<div class="weather-forecast"><span class="text-lg font-bold">Forecast:</span> {$weatherPeriod->detailedForecast} ({$weatherPeriod->shortForecast})</div>
+					<img title="{$weatherPeriod->shortForecast} - {$time}" src="/assets/weather/{$iconFileName}"/>
+					<div title="Temperature" class="weather-temperature">
+						<img class="weather-temperature-icon" src="/assets/weather/fahrenheit-line.svg"/>
+						{$weatherPeriod->temperature}</div>
+					<div title="Humidity" class="weather-humidity">
+						<img class="weather-humidity-icon" src="/assets/weather/water-percent-line.svg"/>
+						{$weatherPeriod->relativeHumidity->value}%
+					</div>
+					<div title="Wind" class="weather-wind">
+						<img class="weather-wind-icon" src="/assets/weather/windy-line.svg"/>
+						{$weatherPeriod->windSpeed}
+					</div>
 				</div>
-				<!-- <div class="weather-icon"><img src="{$weatherPeriod->icon}"/></div> -->
 			</div>
 			HTML;
-		$previousDayName = $weatherPeriod->name;
+		// <!-- <div class="weather-forecast"><span class="text-lg font-bold">Forecast:</span> {$weatherPeriod->detailedForecast} ({$weatherPeriod->shortForecast})</div> -->
+		$previousDayTime = $weatherPeriod->isDaytime;
 	}
 
 	return $weatherHTML;
@@ -79,8 +120,6 @@ $currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properti
 
 echo <<<HTML
 	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
-		<!-- <h3 id="weather-header">Weather</h3>
-		<p>({$currentUpdateTime})</p> -->
 		{$weatherHTML}
 	</div>
 	HTML;

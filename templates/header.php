@@ -31,6 +31,16 @@ $eventBackgroundColor = UI_COLOR_EVENT_BACKGROUND;
 $eventTextColor = UI_COLOR_EVENT_TEXT;
 $headerBackgroundColor = UI_COLOR_HEADER_BACKGROUND;
 $headerTextColor = UI_COLOR_HEADER_TEXT;
+$calendarHeaderBackgroundColor = UI_COLOR_CALENDAR_HEADER_BACKGROUND;
+$calendarHeaderTextColor = UI_COLOR_CALENDAR_HEADER_TEXT;
+$eventDayBackgroundColor = UI_COLOR_EVENT_DAY_HEADER_BACKGROUND;
+$eventDayTextColor = UI_COLOR_EVENT_DAY_HEADER_TEXT;
+$weatherDayBackgroundColor = UI_COLOR_WEATHER_DAY_BACKGROUND;
+$weatherDayTextColor =  UI_COLOR_WEATHER_DAY_TEXT;
+$weatherNightBackgroundColor = UI_COLOR_WEATHER_NIGHT_BACKGROUND;
+$weatherNightTextColor = UI_COLOR_WEATHER_NIGHT_TEXT;
+$calendarHeaderLogoCSS = '';
+$backgroundLogoCSS = '';
 if (UI_LOGO_BACKGROUND_PATH !== '')
 {
 	$backgroundLogo = $appRoot . UI_LOGO_BACKGROUND_PATH;
@@ -51,6 +61,18 @@ if (UI_LOGO_BACKGROUND_PATH !== '')
 			opacity: 40%;
 			z-index: -1;
 			pointer-events: none;
+		}
+		CSS;
+}
+if (UI_LOGO_CALENDAR_HEADER_PATH !== '')
+{
+	$calendarHeaderLogoCSS = <<<CSS
+		#calendar-header {
+			justify-content: space-between;
+		}
+
+		#calendar-header>#calendar-header-text{
+			text-align: left;
 		}
 		CSS;
 }
@@ -75,8 +97,17 @@ echo <<<HTML
 				--event-text-color: {$eventTextColor};
 				--header-background-color: {$headerBackgroundColor};
 				--header-text-color: {$headerTextColor};
+				--calendar-header-background-color: {$calendarHeaderBackgroundColor};
+				--calendar-header-text-color: {$calendarHeaderTextColor};
+				--event-day-background-color: {$eventDayBackgroundColor};
+				--event-day-text-color: {$eventDayTextColor};
+				--weather-day-background-color: {$weatherDayBackgroundColor};
+				--weather-day-text-color: {$weatherDayTextColor};
+				--weather-night-background-color: {$weatherNightBackgroundColor};
+				--weather-night-text-color: {$weatherNightTextColor};
 			}
 
+			{$calendarHeaderLogoCSS}
 			{$backgroundLogoCSS}
 		</style>
 	</head>

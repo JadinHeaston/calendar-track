@@ -20,19 +20,34 @@ a {
 header {
 	@apply w-full text-2xl text-center p-1;
 	background-color: var(--header-background-color);
-	color: var(--header-text-color)
+	color: var(--header-text-color);
 }
 
 main {
 	@apply w-full grow flex flex-col max-h-full items-center p-4;
 }
 
-#calendar-name-header {
-	@apply text-2xl;
+#calendar-header {
+	@apply w-full text-left rounded-lg flex items-center p-1 border border-current;
+	background-color: var(--calendar-header-background-color);
+	color: var(--calendar-header-text-color);
+}
+
+#calendar-header>#calendar-header-text {
+	@apply text-center;
+	width: 100%;
+}
+
+#calendar-header>#calendar-header-text>#calendar-name-header {
+	@apply text-2xl font-bold;
+}
+
+#calendar-header>#calendar-header-logo {
+	@apply w-24 h-full;
 }
 
 #current-time {
-	@apply text-xl mb-2;
+	@apply text-lg mb-2 italic;
 }
 
 #calendar-selection {
@@ -48,11 +63,13 @@ main {
 }
 
 #calendar .event-day-header {
-	@apply text-lg mt-4 text-left pl-0.5;
+	@apply text-lg mt-4 text-left w-1/2 rounded-t-lg font-semibold p-1;
+	background-color: var(--event-day-background-color);
+	color: var(--event-day-text-color);
 }
 
 #calendar .cal-event:first-of-type {
-	@apply rounded-t-lg;
+	@apply rounded-tr-lg;
 }
 
 #calendar .cal-event:last-of-type {
@@ -60,9 +77,17 @@ main {
 }
 
 #calendar .cal-event {
-	@apply flex items-center p-2 border border-current border-opacity-0;
+	@apply flex items-center p-2 border border-current;
 	background-color: var(--event-background-color);
 	color: var(--event-text-color)
+}
+
+#calendar .cal-event.event-past {
+	@apply opacity-80;
+}
+
+#calendar .cal-event.event-current {
+	@apply font-bold;
 }
 
 #calendar .cal-times {
@@ -94,11 +119,60 @@ main {
 }
 
 #weather {
-	@apply absolute w-full -bottom-0 h-40 grid grid-cols-7 border-current border-t rounded-t-lg;
+	@apply absolute w-full -bottom-0 grid grid-cols-7 border-current border-t rounded-t-lg;
+	height: fit-content;
 }
 
 #weather .weather-group {
-	@apply border-current border-l border-r;
+	display: flex;
+	flex-direction: column;
+	@apply border border-current;
+}
+
+#weather .weather-group h5 {
+	width: 100%;
+	text-align: center;
+}
+
+#weather .weather-group .weather-information {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	font-size: 0.75rem;
+	line-height: 1rem;
+}
+
+#weather .weather-group .weather-information>* {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+#weather .weather-group img {
+	height: 1rem;
+	width: 1rem;
+}
+
+#weather .weather-period {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	padding: .5rem;
+}
+
+#weather .weather-day {
+	background-color: var(--weather-day-background-color);
+	color: var(--weather-day-text-color);
+}
+
+#weather .weather-night {
+	background-color: var(--weather-night-background-color);
+	color: var(--weather-night-text-color);
 }
 
 /* Table Styling */
