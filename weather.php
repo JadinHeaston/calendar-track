@@ -19,9 +19,14 @@ function getWeatherData()
 	}
 	else //No valid file to use. Download it.
 	{
-		$url = 'https://api.weather.gov/gridpoints/' . WEATHER_GRID_ID . '/' . WEATHER_GRID_X . ',' . WEATHER_GRID_Y . '/forecast';
-		$weatherData = curlContent($url);
-		file_put_contents($filename, $weatherData);
+		if (getWeatherAPIStatus() === true)
+		{
+			$url = 'https://api.weather.gov/gridpoints/' . WEATHER_GRID_ID . '/' . WEATHER_GRID_X . ',' . WEATHER_GRID_Y . '/forecast';
+			$weatherData = curlContent($url);
+			file_put_contents($filename, $weatherData);
+		}
+		elseif (file_exists($filename))
+			$weatherData = file_get_contents($filename);
 	}
 
 	return json_decode($weatherData);
@@ -79,9 +84,13 @@ function parseWeatherData(object $weatherData)
 
 		//Getting period icon name.
 		if (str_contains($weatherPeriod->shortForecast, ' then ') === true)
-			$iconFileName = $weatherIcons[$time][strstr($weatherPeriod->shortForecast, ' then ', true)];
+			$forecastString = strstr($weatherPeriod->shortForecast, ' then ', true);
 		else
-			$iconFileName = $weatherIcons[$time][$weatherPeriod->shortForecast];
+			$forecastString = $weatherPeriod->shortForecast;
+		if (isset($weatherIcons[$time][$forecastString]))
+			$iconFileName = $weatherIcons[$time][$forecastString];
+		else
+			$iconFileName = $weatherIcons[$time]['default'];
 
 		// //Formatting temperature trend.
 		// if ($weatherPeriod->temperatureTrend === null)

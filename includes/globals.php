@@ -2,6 +2,7 @@
 
 define('WEATHER_ICONS', [
 	'day' => [
+		'default' => 'sun-line.svg',
 		'Sunny' => 'sun-line.svg',
 		'Mostly Sunny' => 'sun-line.svg',
 		'Partly Sunny' => 'sun-cloudy-line.svg',
@@ -15,6 +16,7 @@ define('WEATHER_ICONS', [
 		'Patchy Fog' => 'sun-foggy-line.svg'
 	],
 	'night' => [
+		'default' => 'moon-line.svg',
 		'Cloudy' => 'cloudy-2-line.svg',
 		'Mostly Cloudy' => 'cloudy-2-line.svg',
 		'Partly Cloudy' => 'moon-cloudy-line.svg',

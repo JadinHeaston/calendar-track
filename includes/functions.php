@@ -19,7 +19,7 @@ function getICSEventData(int $id, string $icsLink)
 	//If file exists and is within the timeout range.
 	if (file_exists($filename) && time() - filectime($filename) < FSCACHE_ICAL_CACHE_PERIOD)
 	{
-		$icalHandle = unserialize(file_get_contents($filename));
+		$events = unserialize(file_get_contents($filename));
 	}
 	else //No valid file to use. Download it.
 	{
@@ -32,10 +32,11 @@ function getICSEventData(int $id, string $icsLink)
 		{
 			$icalHandle = unserialize(file_get_contents($filename));
 		}
-		file_put_contents($filename, serialize($icalHandle));
+		$events = $icalHandle->eventsFromInterval(UI_DAY_RANGE . ' days');
+		unset($icalHandle);
+		file_put_contents($filename, serialize($events));
 	}
-
-	return $icalHandle->eventsFromInterval(UI_DAY_RANGE . ' days');
+	return $events;
 }
 
 function getCachedICSLastModificationTime(int $id)
@@ -54,6 +55,15 @@ function curlContent(string $url)
 	$data = curl_exec($ch);
 	curl_close($ch);
 	return $data;
+}
+
+function getWeatherAPIStatus(): bool
+{
+	$result = json_decode(curlContent('https://api.weather.gov/'));
+	if ($result->status === 'OK')
+		return true;
+	else
+		return false;
 }
 
 function printCurrentMemory()
