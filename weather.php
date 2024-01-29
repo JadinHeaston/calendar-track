@@ -43,14 +43,14 @@ function parseWeatherData(object $weatherData)
 	$time = '';
 	$previousDayTime = null;
 	$weatherIcons = WEATHER_ICONS;
-	$periodCount = 0;
+	$periodLimit = 14;
 	foreach ($weatherData->properties->periods as $weatherPeriod)
 	{
-		if ($periodCount >= 14)
+		$weatherPeriod->number = intval($weatherPeriod->number);
+		if ($weatherPeriod->number > 14)
 			continue;
-		if ($weatherPeriod->name === 'Tonight') //Additional period count if it starts at "tonight" to prevent overflow issues.
-			++$periodCount;
-		++$periodCount;
+		if ($weatherPeriod->number === 1 && $weatherPeriod->name === 'Tonight') //Additional period count if it starts at "tonight" to prevent overflow issues.
+			--$periodLimit;
 
 
 		if ($weatherPeriod->isDaytime === true && $previousDayTime !== null)
@@ -72,9 +72,9 @@ function parseWeatherData(object $weatherData)
 			$time = 'night';
 
 		//Creating header, only if it's not a night period. (Can't use $time incase it is "tonight")
-		if (str_contains($weatherPeriod->name, ' Night') === false)
+		if (str_contains($weatherPeriod->name, ' Night') === false && $weatherPeriod->name !== 'Tonight')
 		{
-			if ($periodCount !== 2)
+			if ($weatherPeriod->number !== 2 && in_array($weatherPeriod->name, ['Today']) === false)
 				$dayTitleHTML = '<h5>' . substr($weatherPeriod->name, 0, 3) . '</h5>';
 			else
 				$dayTitleHTML = '<h5>' . $weatherPeriod->name . '</h5>';
@@ -99,20 +99,21 @@ function parseWeatherData(object $weatherData)
 		// 	$weatherPeriod->temperatureTrend = ' (' . $weatherPeriod->temperatureTrend . ')';
 		//Formatting wind.
 		$weatherPeriod->windSpeed = str_replace(' to ', '-', strstr($weatherPeriod->windSpeed, ' mph', true));
+		$appRoot = APP_ROOT;
 		$weatherHTML .= <<<HTML
 			<div class="weather-period weather-{$time}">
 				{$dayTitleHTML}
 				<div class="weather-information">
-					<img title="{$weatherPeriod->shortForecast} - {$time}" src="/assets/weather/{$iconFileName}"/>
+					<img title="{$weatherPeriod->shortForecast} - {$time}" src="{$appRoot}assets/weather/{$iconFileName}"/>
 					<div title="Temperature" class="weather-temperature">
-						<img class="weather-temperature-icon" src="/assets/weather/fahrenheit-line.svg"/>
+						<img class="weather-temperature-icon" src="{$appRoot}assets/weather/fahrenheit-line.svg"/>
 						{$weatherPeriod->temperature}</div>
 					<div title="Humidity" class="weather-humidity">
-						<img class="weather-humidity-icon" src="/assets/weather/water-percent-line.svg"/>
+						<img class="weather-humidity-icon" src="{$appRoot}assets/weather/water-percent-line.svg"/>
 						{$weatherPeriod->relativeHumidity->value}%
 					</div>
 					<div title="Wind" class="weather-wind">
-						<img class="weather-wind-icon" src="/assets/weather/windy-line.svg"/>
+						<img class="weather-wind-icon" src="{$appRoot}assets/weather/windy-line.svg"/>
 						{$weatherPeriod->windSpeed}
 					</div>
 				</div>
