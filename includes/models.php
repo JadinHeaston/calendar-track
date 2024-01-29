@@ -304,7 +304,7 @@ class ScopeTimer
 	function __destruct()
 	{
 		$elapsed_time = microtime(true) - $this->startTime;
-		echo $this->name . ': ' . $elapsed_time . 'ms';
+		echo $this->name . ': ' . $elapsed_time . ' S';
 	}
 
 	//timer = new ScopeTimer(__FILE__);
