@@ -24,25 +24,11 @@ function updateCurrentTime() {
 			weekday: 'long',
 			month: 'long',
 			day: '2-digit',
+			year: 'numeric',
 		});
 
-		const nthNumber = (number: number) => {
-			if (number > 3 && number < 21) return "th";
-			switch (number % 10) {
-				case 1:
-					return "st";
-				case 2:
-					return "nd";
-				case 3:
-					return "rd";
-				default:
-					return "th";
-			}
-		};
-		const ordinalSuffix = nthNumber(now.getDate());
-
 		// Combine the formatted time and date
-		const formattedDateTime = `${formattedTime} - ${formattedDate}${ordinalSuffix}`;
+		const formattedDateTime = `${formattedTime} - ${formattedDate}`;
 
 		// Update the content of the element
 		currentTimeElement.textContent = formattedDateTime;
