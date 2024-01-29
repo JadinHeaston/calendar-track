@@ -74,7 +74,7 @@ function parseWeatherData(object $weatherData)
 		//Creating header, only if it's not a night period. (Can't use $time incase it is "tonight")
 		if (str_contains($weatherPeriod->name, ' Night') === false && $weatherPeriod->name !== 'Tonight')
 		{
-			if ($weatherPeriod->number !== 2 && in_array($weatherPeriod->name, ['Today']) === false)
+			if ($weatherPeriod->number !== 2 && in_array($weatherPeriod->name, ['Today', 'This Afternoon']) === false)
 				$dayTitleHTML = '<h5>' . substr($weatherPeriod->name, 0, 3) . '</h5>';
 			else
 				$dayTitleHTML = '<h5>' . $weatherPeriod->name . '</h5>';
