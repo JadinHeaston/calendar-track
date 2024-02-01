@@ -43,6 +43,7 @@ define('UI_LOGO_CALENDAR_HEADER_PATH', ''); //From the root of the project, with
 define('UI_FULL_PAGE_RELOAD', 86400); //Seconds (>30) | How frequently the entire page will be FULLY reloaded (refreshes cache). Be careful with low values.
 define('UI_CALENDAR_UPDATE_RATE', 300); //Seconds | How frequently the front-end requests calendar updates from the server.
 define('UI_WEATHER_UPDATE_RATE', 7200); //Seconds | How frequently the front-end requests weather updates from the server (weather API).
+define('UI_WEATHER_RECOVERY_RATE', 300); //Seconds | How frequently the front-end requests weather updates from the server after an error where no data was returned (weather API).
 //////Dates - https://www.php.net/manual/en/datetime.format.php
 define('UI_DATE_GROUP_HEADER', 'h:i:s A - l, F dS');
 ////////Events

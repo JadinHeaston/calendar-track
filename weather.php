@@ -14,9 +14,7 @@ function getWeatherData()
 
 	//If file exists and is within the timeout range.
 	if (file_exists($filename) && time() - filemtime($filename) < FSCACHE_WEATHER_CACHE_PERIOD)
-	{
 		$weatherData = file_get_contents($filename);
-	}
 	else //No valid file to use. Download it.
 	{
 		if (getWeatherAPIStatus() === true)
@@ -27,18 +25,12 @@ function getWeatherData()
 		}
 		elseif (file_exists($filename))
 			$weatherData = file_get_contents($filename);
+		else
+			return false;
 	}
 
 	return json_decode($weatherData);
 }
-
-$weatherUpdateRate = UI_WEATHER_UPDATE_RATE;
-
-$weatherData = getWeatherData();
-if ($weatherData !== false)
-	$weatherHTML = parseWeatherData($weatherData);
-else
-	$weatherHTML = '';
 
 function parseWeatherData(object $weatherData): string
 {
@@ -128,6 +120,17 @@ function parseWeatherData(object $weatherData): string
 
 	return $weatherHTML;
 }
+
+$weatherData = getWeatherData();
+if ($weatherData !== false)
+	$weatherHTML = parseWeatherData($weatherData);
+else
+	$weatherHTML = '';
+
+if ($weatherHTML !== '')
+	$weatherUpdateRate = UI_WEATHER_UPDATE_RATE;
+else
+	$weatherUpdateRate = UI_WEATHER_RECOVERY_RATE;
 
 $currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properties->updated));
 
