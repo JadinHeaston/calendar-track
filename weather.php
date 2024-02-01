@@ -35,9 +35,12 @@ function getWeatherData()
 $weatherUpdateRate = UI_WEATHER_UPDATE_RATE;
 
 $weatherData = getWeatherData();
-$weatherHTML = parseWeatherData($weatherData);
+if ($weatherData !== false)
+	$weatherHTML = parseWeatherData($weatherData);
+else
+	$weatherHTML = '';
 
-function parseWeatherData(object $weatherData)
+function parseWeatherData(object $weatherData): string
 {
 	$weatherHTML = '';
 	$time = '';
