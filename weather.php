@@ -14,22 +14,28 @@ function getWeatherData()
 
 	//If file exists and is within the timeout range.
 	if (file_exists($filename) && time() - filemtime($filename) < FSCACHE_WEATHER_CACHE_PERIOD)
-		$weatherData = file_get_contents($filename);
+		$decodedData = json_decode(file_get_contents($filename));
 	else //No valid file to use. Download it.
 	{
 		if (getWeatherAPIStatus() === true)
 		{
 			$url = 'https://api.weather.gov/gridpoints/' . WEATHER_GRID_ID . '/' . WEATHER_GRID_X . ',' . WEATHER_GRID_Y . '/forecast';
-			$weatherData = curlContent($url);
-			file_put_contents($filename, $weatherData);
+			$rawWeatherData = curlContent($url);
+			$decodedData = json_decode($rawWeatherData);
+			if ($decodedData !== false && $decodedData !== null)
+				file_put_contents($filename, $rawWeatherData);
+			elseif (file_exists($filename))
+				$decodedData = json_decode(file_get_contents($filename));
+			else
+				return false;
 		}
 		elseif (file_exists($filename))
-			$weatherData = file_get_contents($filename);
+			$decodedData = json_decode(file_get_contents($filename));
 		else
 			return false;
 	}
 
-	return json_decode($weatherData);
+	return $decodedData;
 }
 
 function parseWeatherData(object $weatherData): string
@@ -122,7 +128,7 @@ function parseWeatherData(object $weatherData): string
 }
 
 $weatherData = getWeatherData();
-if ($weatherData !== false)
+if ($weatherData !== false && $weatherData !== null)
 	$weatherHTML = parseWeatherData($weatherData);
 else
 	$weatherHTML = '';
