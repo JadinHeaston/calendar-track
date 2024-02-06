@@ -247,7 +247,7 @@ class DatabaseConnector
 	}
 }
 
-class RTConnector extends DatabaseConnector
+class CTConnector extends DatabaseConnector
 {
 	public function getCalendar(int $calendarID = 0, bool $includeICS = false)
 	{
