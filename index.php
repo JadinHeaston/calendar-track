@@ -5,6 +5,11 @@ if (isset($_GET['id']))
 	$id = intval($_GET['id']);
 else
 	$id = 0;
+//Bypasses database setting for weather toggle.
+if (isset($_GET['force-weather']))
+	$manualWeatherFlag = intval($_GET['force-weather']);
+else
+	$manualWeatherFlag = null;
 
 $calendars = $connection->getCalendar($id, true);
 
@@ -130,15 +135,18 @@ if ($id !== 0 & count($calendars) === 1)
 		</div>
 		HTML;
 
-	if (WEATHER_ENABLE === true)
-	{
-		//Weather
-		echo <<<HTML
-			<div id="weather" hx-trigger="load queue:none" hx-get="weather.php?id={$id}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
-				<h3 id="weather-header">Weather</h3>
-			</div>
-			HTML;
-	}
+	if ($manualWeatherFlag !== null)
+		$weatherFlagHTML = '&force-weather=' . $manualWeatherFlag;
+	else
+		$weatherFlagHTML = '';
+
+	//Weather
+	echo <<<HTML
+		<div id="weather" hx-trigger="load queue:none" hx-get="weather.php?id={$id}{$weatherFlagHTML}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
+			<h3 id="weather-header">Weather</h3>
+		</div>
+		HTML;
+
 	//Closing container div.
 	echo <<<HTML
 		</div>
