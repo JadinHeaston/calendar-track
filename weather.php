@@ -3,6 +3,11 @@ require_once(__DIR__ . '/includes/loader.php');
 if (WEATHER_ENABLE !== true)
 	return false;
 
+if (isset($_GET['id']))
+	$id = intval($_GET['id']);
+else
+	return false;
+
 require_once(__DIR__ . '/templates/header.php');
 
 function getWeatherData()
@@ -141,7 +146,7 @@ else
 $currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properties->updated));
 
 echo <<<HTML
-	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
+	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php?id={$id}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
 		{$weatherHTML}
 	</div>
 	HTML;

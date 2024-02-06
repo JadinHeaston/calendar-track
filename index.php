@@ -54,7 +54,7 @@ if ($id !== 0 & count($calendars) === 1)
 	unset($calendar); //Unsetting calendar ASAP to drop memory usage. All relavent events have been retrieved.
 	//Calendar
 	echo <<<HTML
-		<div id="calendar" hx-trigger="click queue:none, every {$calendarUpdateRate}s queue:none" hx-get="" hx-select="#calendar" hx-target="#calendar" hx-swap="outerHTML">
+		<div id="calendar" hx-trigger="click queue:none, every {$calendarUpdateRate}s queue:none" hx-get="?id={$id}" hx-select="#calendar" hx-target="#calendar" hx-swap="outerHTML">
 		HTML;
 
 	if (UI_DISPLAY_EVENT_HEADER === true)
@@ -134,7 +134,7 @@ if ($id !== 0 & count($calendars) === 1)
 	{
 		//Weather
 		echo <<<HTML
-			<div id="weather" hx-trigger="load queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
+			<div id="weather" hx-trigger="load queue:none" hx-get="weather.php?id={$id}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
 				<h3 id="weather-header">Weather</h3>
 			</div>
 			HTML;
