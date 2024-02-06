@@ -132,13 +132,19 @@ function parseWeatherData(object $weatherData): string
 	return $weatherHTML;
 }
 
-$weatherData = getWeatherData();
-if ($weatherData !== false && $weatherData !== null)
-	$weatherHTML = parseWeatherData($weatherData);
+$weatherToggle = $connection->getCalendarWeatherToggle($id);
+if ($weatherToggle === true)
+{
+	$weatherData = getWeatherData();
+	if ($weatherData !== false && $weatherData !== null)
+		$weatherHTML = parseWeatherData($weatherData);
+	else
+		$weatherHTML = '';
+}
 else
 	$weatherHTML = '';
 
-if ($weatherHTML !== '')
+if ($weatherToggle === false || $weatherHTML !== '')
 	$weatherUpdateRate = UI_WEATHER_UPDATE_RATE;
 else
 	$weatherUpdateRate = UI_WEATHER_RECOVERY_RATE;

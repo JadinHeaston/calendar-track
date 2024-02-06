@@ -251,7 +251,7 @@ class CTConnector extends DatabaseConnector
 {
 	public function getCalendar(int $calendarID = 0, bool $includeICS = false)
 	{
-		$query = 'SELECT id, name' . ($includeICS === true ? ', ics_link' : '') . ' FROM calendar WHERE active = TRUE';
+		$query = 'SELECT id, name, enable_weather' . ($includeICS === true ? ', ics_link' : '') . ' FROM calendar WHERE active = TRUE';
 		$params = [];
 		if ($calendarID !== 0)
 		{
@@ -260,6 +260,16 @@ class CTConnector extends DatabaseConnector
 		}
 
 		return $this->select($query, $params);
+	}
+	public function getCalendarWeatherToggle(int $calendarID)
+	{
+		$query = 'SELECT enable_weather FROM calendar WHERE active = TRUE AND id = ?';
+
+		$results = $this->select($query, [$calendarID]);
+		if ($results !== false && count($results) === 1)
+			return boolval(intval($results[0]['enable_weather']));
+		else
+			return false;
 	}
 
 	public function removeCalendar(int $calendarID)
