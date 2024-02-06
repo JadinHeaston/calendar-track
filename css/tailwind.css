@@ -27,6 +27,10 @@ main {
 	@apply w-full grow flex flex-col max-h-full items-center p-4;
 }
 
+iframe.horizontal-split {
+	@apply w-full grow flex flex-col max-h-full items-center m-0.5 border border-current rounded-md;
+}
+
 #calendar-header {
 	@apply w-full text-left rounded-lg flex items-center p-1 border border-current;
 	background-color: var(--calendar-header-background-color);
@@ -119,14 +123,14 @@ main {
 }
 
 #weather {
-	@apply absolute w-full -bottom-0 grid grid-cols-7 border-current border-t rounded-t-lg;
+	@apply fixed w-full -bottom-0 grid grid-cols-7 border-current border-t rounded-t-lg;
 	height: fit-content;
 }
 
 #weather .weather-group {
+	@apply border border-current;
 	display: flex;
 	flex-direction: column;
-	@apply border border-current;
 }
 
 #weather .weather-group h5 {

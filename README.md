@@ -21,10 +21,10 @@ I will eventually host a proper [dockerhub](https://hub.docker.com/) image, but 
 
 The order of parameters does not matter.
 
-| key           | required | value options               | description                                                                                                                                                                                                                                                |
-| ------------- | -------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| id            | [X]      | integer ID of the calendar. | Defines which calendar is to be shown. This is passed to the weather portion to help decided whether weather is enable for that calendar within the database.                                                                                              |
-| force-weather | []       | `1` \| `0` \| `{OMIT}`      | Bypasses the database setting for a given display. Ommitting the value falls back to the database setting (which is `0` by default).<br><br>**NOTE:** Weather must be enabled globally (via the `./includes/config.php` file) for this to have any effect. |
+| key            | required | value options                                                               | description                                                                                                                                                                                                                                                |
+| -------------- | -------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id` \| `id[]` | [X]      | integer (or array of integers) defining calendars that should be displayed. | Defines which calendars should be shown. The order in which values are passed determine how they will be shown.<br><br>**NOTE:** It is current not possible to                                                                                                                                              |
+| force-weather  | []       | `1` \| `0` \| `{OMIT}`                                                      | Bypasses the database setting for a given display. Ommitting the value falls back to the database setting (which is `0` by default).<br><br>**NOTE:** Weather must be enabled globally (via the `./includes/config.php` file) for this to have any effect. |
 
 
 ### Weather

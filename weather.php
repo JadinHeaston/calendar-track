@@ -136,7 +136,7 @@ function parseWeatherData(object $weatherData): string
 
 if (WEATHER_ENABLE === false || $manualWeatherFlag === 0) //Not enabled globally, or manually disabled.
 	$weatherHTML = '';
-elseif ($manualWeatherFlag === 1 || $connection->getCalendarWeatherToggle($id) === true) //Manually enabled or enabled via DB.
+elseif ($id === 0 || $manualWeatherFlag === 1 || $connection->getCalendarWeatherToggle($id) === true) //Manually enabled or enabled via DB.
 {
 	$weatherData = getWeatherData();
 	if ($weatherData !== false && $weatherData !== null)

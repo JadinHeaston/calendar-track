@@ -23,7 +23,7 @@ function updateCurrentTime() {
 		const formattedDate = now.toLocaleDateString('en-US', {
 			weekday: 'long',
 			month: 'long',
-			day: '2-digit',
+			day: 'numeric',
 			year: 'numeric',
 		});
 
