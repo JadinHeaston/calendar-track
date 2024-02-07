@@ -1,14 +1,20 @@
 <?php
 require_once(__DIR__ . '/includes/loader.php');
-if (WEATHER_ENABLE !== true)
+
+if (isset($_GET['id']))
+	$id = intval($_GET['id']);
+else
 	return false;
+//Bypasses database settings.
+if (isset($_GET['force-weather']))
+	$manualWeatherFlag = intval($_GET['force-weather']);
+else
+	$manualWeatherFlag = null;
 
 require_once(__DIR__ . '/templates/header.php');
 
 function getWeatherData()
 {
-	if (WEATHER_ENABLE !== true)
-		return false;
 	//Check for file in with this ID in ./cache/weather/
 	$filename = './cache/weather/' . WEATHER_GRID_ID . '_' . WEATHER_GRID_X . '_' . WEATHER_GRID_Y . '.json';
 
@@ -127,21 +133,33 @@ function parseWeatherData(object $weatherData): string
 	return $weatherHTML;
 }
 
-$weatherData = getWeatherData();
-if ($weatherData !== false && $weatherData !== null)
-	$weatherHTML = parseWeatherData($weatherData);
+
+if (WEATHER_ENABLE === false || $manualWeatherFlag === 0) //Not enabled globally, or manually disabled.
+	$weatherHTML = '';
+elseif ($id === 0 || $manualWeatherFlag === 1 || $connection->getCalendarWeatherToggle($id) === true) //Manually enabled or enabled via DB.
+{
+	$weatherData = getWeatherData();
+	if ($weatherData !== false && $weatherData !== null)
+		$weatherHTML = parseWeatherData($weatherData);
+	else
+		$weatherHTML = '';
+}
 else
 	$weatherHTML = '';
 
-if ($weatherHTML !== '')
+if (WEATHER_ENABLE === false || $manualWeatherFlag === 0 || $weatherDBToggle === false || $weatherHTML !== '')
 	$weatherUpdateRate = UI_WEATHER_UPDATE_RATE;
 else
 	$weatherUpdateRate = UI_WEATHER_RECOVERY_RATE;
 
+if ($manualWeatherFlag !== null)
+	$weatherFlagHTML = '&force-weather=' . $manualWeatherFlag;
+else
+	$weatherFlagHTML = '';
 $currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properties->updated));
 
 echo <<<HTML
-	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
+	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php?id={$id}{$weatherFlagHTML}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
 		{$weatherHTML}
 	</div>
 	HTML;

@@ -1,7 +1,9 @@
 # Calendar Track
 
 This is a barebones PHP application for use as a display in front of a conference rooms (we opted to use a Raspbery Pi (3 | Model B) behind a PoE powered monitor)  
-It was created with Google Calendar in mind, but should work for any 
+It was created with Google Calendar in mind, but should work for any calendar.
+
+
 
 ## Deployment
 
@@ -15,12 +17,24 @@ I will eventually host a proper [dockerhub](https://hub.docker.com/) image, but 
 3. Copy `./includes/config.example.php` to `./includes/config.php` and edit as necessary.
 4. Copy either `php-development` or `php-production` as needed as `php.ini` in the `./docker/php/` folder. Edit as necessary.
 
+### Parameters
+
+The order of parameters does not matter.
+
+| key            | required | value options                                                               | description                                                                                                                                                                                                                                                |
+| -------------- | -------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id` \| `id[]` | [X]      | integer (or array of integers) defining calendars that should be displayed. | Defines which calendars should be shown. The order in which values are passed determine how they will be shown.<br><br>**NOTE:** It is current not possible to                                                                                                                                              |
+| force-weather  | []       | `1` \| `0` \| `{OMIT}`                                                      | Bypasses the database setting for a given display. Ommitting the value falls back to the database setting (which is `0` by default).<br><br>**NOTE:** Weather must be enabled globally (via the `./includes/config.php` file) for this to have any effect. |
+
+
 ### Weather
 
 Weather is provided by the [National Oceanic and Atmospheric Administration](https://www.weather.gov/documentation/services-web-api) (api.weather.gov)
 
 Use `https://api.weather.gov/points/LAT,LONG` to find Weather Grid information.
 	- The lat and long go to a precision of 4.
+  
+By default, this is disabled globally within the `./includes/config.php` file.
 
 ## How does it work?
 
@@ -47,7 +61,7 @@ Singular Build: `npm run build`
 
 ## Future Plans
 
-- Improve fallback conditions for when data unexpectedly can't be loaded.
+- Add support for multiple calendars on a single display, split horizontally.
 - Finish calendar link management area.
 
 ## Shout-Outs ("Vendors")

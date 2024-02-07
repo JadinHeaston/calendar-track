@@ -41,6 +41,7 @@ $weatherNightBackgroundColor = UI_COLOR_WEATHER_NIGHT_BACKGROUND;
 $weatherNightTextColor = UI_COLOR_WEATHER_NIGHT_TEXT;
 $calendarHeaderLogoCSS = '';
 $backgroundLogoCSS = '';
+$embedCSS = '';
 if (UI_LOGO_BACKGROUND_PATH !== '')
 {
 	$backgroundLogo = $appRoot . UI_LOGO_BACKGROUND_PATH;
@@ -73,6 +74,19 @@ if (UI_LOGO_CALENDAR_HEADER_PATH !== '')
 
 		#calendar-header>#calendar-header-text{
 			text-align: left;
+		}
+		CSS;
+}
+
+if (isset($_GET['embed']))
+{
+	$embedCSS = <<<CSS
+		body {
+			overflow: hidden;
+		}
+
+		#weather {
+			display: none;
 		}
 		CSS;
 }
@@ -109,6 +123,7 @@ echo <<<HTML
 
 			{$calendarHeaderLogoCSS}
 			{$backgroundLogoCSS}
+			{$embedCSS}
 		</style>
 	</head>
 

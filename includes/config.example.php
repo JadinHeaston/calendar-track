@@ -50,7 +50,7 @@ define('UI_DATE_GROUP_HEADER', 'h:i:s A - l, F dS');
 define('UI_DATE_EVENT_HEADER', 'l - jS F o');
 define('UI_DATE_EVENT_TIME', 'g:i A');
 ////Weather
-define('WEATHER_ENABLE', false);
+define('WEATHER_ENABLE', false); //Globally toggle weather.
 define('WEATHER_GRID_ID', 'LSX');
 define('WEATHER_GRID_X', 19);
 define('WEATHER_GRID_Y', 87);

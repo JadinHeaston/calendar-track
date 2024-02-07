@@ -247,19 +247,30 @@ class DatabaseConnector
 	}
 }
 
-class RTConnector extends DatabaseConnector
+class CTConnector extends DatabaseConnector
 {
-	public function getCalendar(int $calendarID = 0, bool $includeICS = false)
+	public function getCalendar(array $calendarIDs = [], bool $includeICS = false)
 	{
-		$query = 'SELECT id, name' . ($includeICS === true ? ', ics_link' : '') . ' FROM calendar WHERE active = TRUE';
+		$query = 'SELECT id, name, enable_weather' . ($includeICS === true ? ', ics_link' : '') . ' FROM calendar WHERE active = TRUE';
 		$params = [];
-		if ($calendarID !== 0)
+		if (count($calendarIDs) > 0)
 		{
-			$query .= ' AND id = ?';
-			$params[] = $calendarID;
+			$query .= ' AND id IN (' . implode(',', array_fill(0, count($calendarIDs), '?')) . ')';
+			$params = $calendarIDs;
 		}
 
 		return $this->select($query, $params);
+	}
+
+	public function getCalendarWeatherToggle(int $calendarID): bool
+	{
+		$query = 'SELECT enable_weather FROM calendar WHERE active = TRUE AND id = ?';
+
+		$results = $this->select($query, [$calendarID]);
+		if ($results !== false && count($results) === 1)
+			return boolval(intval($results[0]['enable_weather']));
+		else
+			return false;
 	}
 
 	public function removeCalendar(int $calendarID)

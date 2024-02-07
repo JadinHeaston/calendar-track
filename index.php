@@ -1,20 +1,45 @@
 <?php
 require_once(__DIR__ . '/includes/loader.php');
 
-if (isset($_GET['id']))
-	$id = intval($_GET['id']);
+if (isset($_GET['id']) && is_array($_GET['id']))
+{
+	foreach ($_GET['id'] as &$id)
+	{
+		$id = intval($id);
+	}
+	$allIDs = $_GET['id'];
+}
+elseif (isset($_GET['id']) && is_numeric($_GET['id']))
+	$allIDs = [intval($_GET['id'])];
 else
-	$id = 0;
+	$allIDs = [];
 
-$calendars = $connection->getCalendar($id, true);
+//Bypasses database setting for weather toggle.
+if (isset($_GET['force-weather']))
+	$forceWeatherFlag = intval($_GET['force-weather']);
+else
+	$forceWeatherFlag = null;
+$forceWeatherFlagHTML = generateForceWeatherHTML($forceWeatherFlag);
 
 require_once(__DIR__ . '/templates/header.php');
 echo <<<HTML
 	<main>
 	HTML;
 
-if ($id !== 0 & count($calendars) === 1)
+if (count($allIDs) > 1)
 {
+	foreach ($allIDs as &$id)
+	{
+		echo <<<HTML
+			<iframe class="horizontal-split"src="?id[]={$id}{$forceWeatherFlagHTML}&embed" title="{$id}"></iframe> 
+			HTML;
+	}
+	echo generateWeatherDiv(0, $forceWeatherFlagHTML);
+}
+elseif (count($allIDs) === 1)
+{
+	$calendars = $connection->getCalendar($allIDs, true);
+	$id = $allIDs[0];
 	$calendar = $calendars[0];
 	unset($calendars);
 	//Display the main calendar view.
@@ -54,7 +79,7 @@ if ($id !== 0 & count($calendars) === 1)
 	unset($calendar); //Unsetting calendar ASAP to drop memory usage. All relavent events have been retrieved.
 	//Calendar
 	echo <<<HTML
-		<div id="calendar" hx-trigger="click queue:none, every {$calendarUpdateRate}s queue:none" hx-get="" hx-select="#calendar" hx-target="#calendar" hx-swap="outerHTML">
+		<div id="calendar" hx-trigger="click queue:none, every {$calendarUpdateRate}s queue:none" hx-get="?id={$id}" hx-select="#calendar" hx-target="#calendar" hx-swap="outerHTML">
 		HTML;
 
 	if (UI_DISPLAY_EVENT_HEADER === true)
@@ -130,15 +155,9 @@ if ($id !== 0 & count($calendars) === 1)
 		</div>
 		HTML;
 
-	if (WEATHER_ENABLE === true)
-	{
-		//Weather
-		echo <<<HTML
-			<div id="weather" hx-trigger="load queue:none" hx-get="weather.php" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
-				<h3 id="weather-header">Weather</h3>
-			</div>
-			HTML;
-	}
+	//Weather
+	echo generateWeatherDiv($id, $forceWeatherFlagHTML);
+
 	//Closing container div.
 	echo <<<HTML
 		</div>
@@ -146,6 +165,7 @@ if ($id !== 0 & count($calendars) === 1)
 }
 else
 {
+	$calendars = $connection->getCalendar($allIDs, false);
 	//Display the calendar list view.
 	$options = '';
 	foreach ($calendars as $calendar)
@@ -156,7 +176,7 @@ else
 			HTML;
 	}
 	echo <<<HTML
-		<select placeholder="Calendar Selection" id="calendar-selection" name="id" hx-trigger="change" hx-get="" hx-push-url="true" hx-select="main" hx-target="main" hx-swap="outerHTML">
+		<select placeholder="Calendar Selection" id="calendar-selection" name="id[]" hx-trigger="change" hx-get="" hx-push-url="true" hx-select="main" hx-target="main" hx-swap="outerHTML">
 			<option disabled selected>Calendar Selection</option>
 			$options
 		</select>
@@ -168,3 +188,22 @@ echo <<<HTML
 	HTML;
 
 require_once(__DIR__ . '/templates/footer.php');
+
+
+function generateForceWeatherHTML(?int $forceWeatherFlag): string
+{
+	if ($forceWeatherFlag !== null)
+		return '&force-weather=' . $forceWeatherFlag;
+	else
+		return '';
+}
+
+
+function generateWeatherDiv(int $id, string $forceWeatherFlagHTML): string
+{
+	return <<<HTML
+		<div id="weather" hx-trigger="load queue:none" hx-get="weather.php?id={$id}{$forceWeatherFlagHTML}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
+			<h3 id="weather-header">Weather</h3>
+		</div>
+		HTML;
+}
