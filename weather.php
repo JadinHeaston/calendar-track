@@ -22,7 +22,7 @@ function getWeatherData()
 			$url = 'https://api.weather.gov/gridpoints/' . WEATHER_GRID_ID . '/' . WEATHER_GRID_X . ',' . WEATHER_GRID_Y . '/forecast';
 			$rawWeatherData = curlContent($url);
 			$decodedData = json_decode($rawWeatherData);
-			if ($decodedData !== false && $decodedData !== null)
+			if ($decodedData !== false && $decodedData !== null && isset($decodedData->type) && $decodedData->type === 'Feature')
 				file_put_contents($filename, $rawWeatherData);
 			elseif (file_exists($filename))
 				$decodedData = json_decode(file_get_contents($filename));
