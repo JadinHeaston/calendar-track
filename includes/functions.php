@@ -32,9 +32,25 @@ function getICSEventData(int $id, string $icsLink)
 		{
 			$icalHandle = unserialize(file_get_contents($filename));
 		}
-		$events = $icalHandle->eventsFromInterval(UI_DAY_RANGE . ' days');
-		unset($icalHandle);
-		file_put_contents($filename, serialize($events));
+
+		//Check that data was recieved.
+		if ($icalHandle !== null && empty($icalHandle) === false)
+		{
+			$events = $icalHandle->eventsFromInterval(UI_DAY_RANGE . ' days');
+			unset($icalHandle);
+			file_put_contents($filename, serialize($events));
+		}
+		else //Bad/No data recieved.
+		{
+			if (file_exists($filename))
+			{
+				$events = unserialize(file_get_contents($filename));
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 	return $events;
 }

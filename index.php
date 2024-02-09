@@ -75,6 +75,11 @@ elseif (count($allIDs) === 1)
 	}
 
 	$events = getICSEventData(intval($calendar['id']), $calendar['ics_link']);
+	if ($events === false)
+	{
+		echo 'Failed to get events.';
+		die();
+	}
 	$eventsLastUpdatedTime = getCachedICSLastModificationTime(intval($calendar['id']));
 	unset($calendar); //Unsetting calendar ASAP to drop memory usage. All relavent events have been retrieved.
 	//Calendar
