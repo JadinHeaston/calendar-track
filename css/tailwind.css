@@ -125,6 +125,7 @@ iframe.horizontal-split {
 #weather {
 	@apply fixed w-full -bottom-0 grid grid-cols-7 border-current border-t rounded-t-lg;
 	height: fit-content;
+	max-height: 25vh;
 }
 
 #weather .weather-group {
