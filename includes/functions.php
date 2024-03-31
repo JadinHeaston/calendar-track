@@ -30,6 +30,7 @@ function getICSEventData(int $id, string $icsLink)
 		}
 		catch (Exception $error)
 		{
+			/** @var \Ical\ICal $icalHandle */
 			$icalHandle = unserialize(file_get_contents($filename));
 		}
 
