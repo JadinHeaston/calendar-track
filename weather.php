@@ -10,18 +10,23 @@ if (isset($_GET['force-weather']))
 	$manualWeatherFlag = intval($_GET['force-weather']);
 else
 	$manualWeatherFlag = null;
+if (isset($_GET['weather-recovery']))
+	$weatherRecoveryFlag = boolval(intval($_GET['weather-recovery']));
+else
+	$weatherRecoveryFlag = false;
 
+$recoveryURLParamter = '';
 require_once(__DIR__ . '/templates/header.php');
 
-function getWeatherData()
+function getWeatherData(bool $forceRefresh = false)
 {
 	//Check for file in with this ID in ./cache/weather/
 	$filename = './cache/weather/' . WEATHER_GRID_ID . '_' . WEATHER_GRID_X . '_' . WEATHER_GRID_Y . '.json';
 
 	//If file exists and is within the timeout range.
-	if (file_exists($filename) && time() - filemtime($filename) < FSCACHE_WEATHER_CACHE_PERIOD)
+	if ($forceRefresh !== true && file_exists($filename) && time() - filemtime($filename) < FSCACHE_WEATHER_CACHE_PERIOD)
 		$decodedData = json_decode(file_get_contents($filename));
-	else //No valid file to use. Download it.
+	else //No valid file to use or it's time to update the file. Download it.
 	{
 		if (getWeatherAPIStatus() === true)
 		{
@@ -30,12 +35,12 @@ function getWeatherData()
 			$decodedData = json_decode($rawWeatherData);
 			if ($decodedData !== false && $decodedData !== null && isset($decodedData->type) && $decodedData->type === 'Feature')
 				file_put_contents($filename, $rawWeatherData);
-			elseif (file_exists($filename))
+			elseif (file_exists($filename)) //Download failed for whatever reason. Use the cached file.
 				$decodedData = json_decode(file_get_contents($filename));
 			else
 				return false;
 		}
-		elseif (file_exists($filename))
+		elseif (file_exists($filename)) //API Status failed. Use the cached file.
 			$decodedData = json_decode(file_get_contents($filename));
 		else
 			return false;
@@ -54,9 +59,9 @@ function parseWeatherData(object $weatherData): string
 	foreach ($weatherData->properties->periods as $weatherPeriod)
 	{
 		$weatherPeriod->number = intval($weatherPeriod->number);
-		if ($weatherPeriod->number > 14)
+		if ($weatherPeriod->number > $periodLimit)
 			continue;
-		if ($weatherPeriod->number === 1 && $weatherPeriod->name === 'Tonight') //Additional period count if it starts at "tonight" to prevent overflow issues.
+		if ($weatherPeriod->number === 1 && in_array($weatherPeriod->name, ['Tonight', 'Overnight']) === true) //Additional period count if it starts at "tonight" to prevent overflow issues.
 			--$periodLimit;
 
 
@@ -79,9 +84,9 @@ function parseWeatherData(object $weatherData): string
 			$time = 'night';
 
 		//Creating header, only if it's not a night period. (Can't use $time incase it is "tonight")
-		if (str_contains($weatherPeriod->name, ' Night') === false && $weatherPeriod->name !== 'Tonight')
+		if (str_contains($weatherPeriod->name, ' Night') === false && in_array($weatherPeriod->name, ['Tonight']) === false)
 		{
-			if ($weatherPeriod->number !== 2 && in_array($weatherPeriod->name, ['Today', 'This Afternoon']) === false)
+			if (in_array($weatherPeriod->name, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']) === true)
 				$dayTitleHTML = '<h5>' . substr($weatherPeriod->name, 0, 3) . '</h5>';
 			else
 				$dayTitleHTML = '<h5>' . $weatherPeriod->name . '</h5>';
@@ -133,12 +138,14 @@ function parseWeatherData(object $weatherData): string
 	return $weatherHTML;
 }
 
+if ($manualWeatherFlag !== 1)
+	$weatherDBToggle = $connection->getCalendarWeatherToggle($id);
 
 if (WEATHER_ENABLE === false || $manualWeatherFlag === 0) //Not enabled globally, or manually disabled.
 	$weatherHTML = '';
-elseif ($id === 0 || $manualWeatherFlag === 1 || $connection->getCalendarWeatherToggle($id) === true) //Manually enabled or enabled via DB.
+elseif ($id === 0 || $manualWeatherFlag === 1 || $weatherDBToggle === true) //Manually enabled or enabled via DB.
 {
-	$weatherData = getWeatherData();
+	$weatherData = getWeatherData($weatherRecoveryFlag);
 	if ($weatherData !== false && $weatherData !== null)
 		$weatherHTML = parseWeatherData($weatherData);
 	else
@@ -147,10 +154,15 @@ elseif ($id === 0 || $manualWeatherFlag === 1 || $connection->getCalendarWeather
 else
 	$weatherHTML = '';
 
-if (WEATHER_ENABLE === false || $manualWeatherFlag === 0 || $weatherDBToggle === false || $weatherHTML !== '')
+if (WEATHER_ENABLE === true && ($manualWeatherFlag === 1 || $weatherDBToggle === true) && $weatherHTML !== '')
+{
 	$weatherUpdateRate = UI_WEATHER_UPDATE_RATE;
+}
 else
+{
+	$recoveryURLParamter = '&weather-recovery=1';
 	$weatherUpdateRate = UI_WEATHER_RECOVERY_RATE;
+}
 
 if ($manualWeatherFlag !== null)
 	$weatherFlagHTML = '&force-weather=' . $manualWeatherFlag;
@@ -159,7 +171,7 @@ else
 $currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properties->updated));
 
 echo <<<HTML
-	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php?id={$id}{$weatherFlagHTML}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
+	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php?id={$id}{$weatherFlagHTML}{$recoveryURLParamter}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
 		{$weatherHTML}
 	</div>
 	HTML;
