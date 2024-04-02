@@ -31,7 +31,7 @@ if (count($allIDs) > 1)
 	foreach ($allIDs as &$id)
 	{
 		echo <<<HTML
-			<iframe class="horizontal-split"src="?id[]={$id}{$forceWeatherFlagHTML}&embed" title="{$id}"></iframe> 
+			<iframe class="tiles" src="?id[]={$id}{$forceWeatherFlagHTML}&embed" title="Calendar #{$id}"></iframe> 
 			HTML;
 	}
 	echo generateWeatherDiv(0, $forceWeatherFlagHTML);

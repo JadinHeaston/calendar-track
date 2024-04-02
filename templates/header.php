@@ -4,10 +4,11 @@ if (isHTMX())
 
 //Create version hashes based on last modified time.
 $versionedFiles = array(
-	'/../assets/favicon.svg' => '',
-	'/../css/tailwind_output.css' => '',
-	'/../js/scripts.js' => '',
-	'/../vendor/htmx.min.js' => '',
+	__DIR__ . '/../assets/favicon.svg' => '',
+	__DIR__ . '/../css/tailwind_output.css' => '',
+	__DIR__ . '/../css/styles.css' => '',
+	__DIR__ . '/../js/scripts.js' => '',
+	__DIR__ . '/../vendor/htmx.min.js' => '',
 );
 
 foreach ($versionedFiles as $fileName => $hash)
@@ -42,6 +43,7 @@ $weatherNightTextColor = UI_COLOR_WEATHER_NIGHT_TEXT;
 $calendarHeaderLogoCSS = '';
 $backgroundLogoCSS = '';
 $embedCSS = '';
+$tilingLayoutCSS = '';
 if (UI_LOGO_BACKGROUND_PATH !== '')
 {
 	$backgroundLogo = $appRoot . UI_LOGO_BACKGROUND_PATH;
@@ -78,6 +80,16 @@ if (UI_LOGO_CALENDAR_HEADER_PATH !== '')
 		CSS;
 }
 
+if (isset($_GET['horizontal-tiling']) && intval($_GET['horizontal-tiling']) === 1)
+{
+	$tilingLayoutCSS = <<<CSS
+		main {
+			flex-direction: row;
+			height: 100%;
+		}
+		CSS;
+}
+
 if (isset($_GET['embed']))
 {
 	$embedCSS = <<<CSS
@@ -99,10 +111,11 @@ echo <<<HTML
 		<title>Calendar Track</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		{$autoRefreshScript}
-		<link rel="icon" href="{$appRoot}assets/favicon.svg?v={$versionedFiles['/../assets/favicon.svg']}" type="image/svg+xml">
-		<link rel="stylesheet" href="{$appRoot}css/tailwind_output.css?v={$versionedFiles['/../css/tailwind_output.css']}">
-		<script src="{$appRoot}js/scripts.js?v={$versionedFiles['/../js/scripts.js']}"></script>
-		<script src="{$appRoot}vendor/htmx.min.js?v={$versionedFiles['/../vendor/htmx.min.js']}"></script>
+		<link rel="icon" href="{$appRoot}assets/favicon.svg?v={$versionedFiles[__DIR__ . '/../assets/favicon.svg']}" type="image/svg+xml">
+		<link rel="stylesheet" href="{$appRoot}css/tailwind_output.css?v={$versionedFiles[__DIR__ . '/../css/tailwind_output.css']}">
+		<link rel="stylesheet" href="{$appRoot}css/styles.css?v={$versionedFiles[__DIR__ . '/../css/styles.css']}">
+		<script src="{$appRoot}js/scripts.js?v={$versionedFiles[__DIR__ . '/../js/scripts.js']}"></script>
+		<script src="{$appRoot}vendor/htmx.min.js?v={$versionedFiles[__DIR__ . '/../vendor/htmx.min.js']}"></script>
 		<style>
 			:root {
 				--main-background-color: {$mainBackgroundColor};
@@ -124,6 +137,7 @@ echo <<<HTML
 			{$calendarHeaderLogoCSS}
 			{$backgroundLogoCSS}
 			{$embedCSS}
+			{$tilingLayoutCSS}
 		</style>
 	</head>
 

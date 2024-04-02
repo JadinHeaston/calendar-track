@@ -1,0 +1,261 @@
+:root {
+	font-size: 20px;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 100vh;
+	width: 100%;
+	background-color: var(--main-background-color);
+	color: var(--main-text-color);
+	background-size: cover;
+}
+
+header {
+	font-size: 1.5rem;
+	line-height: 2rem;
+	text-align: center;
+	padding: 0.25rem;
+	background-color: var(--header-background-color);
+	color: var(--header-text-color);
+	width: 100%;
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	flex-grow: 1;
+	width: 100%;
+	max-height: 100%;
+	padding: 1rem;
+}
+
+iframe.tiles {
+	flex-grow: 1;
+	margin: 0.125rem;
+	width: 100%;
+	max-height: 100%;
+	border-width: 1px;
+	border-color: currentColor;
+	border-radius: 0.375rem;
+}
+
+#calendar-header {
+	display: flex;
+	align-items: center;
+	text-align: left;
+	background-color: var(--calendar-header-background-color);
+	color: var(--calendar-header-text-color);
+	padding: 0.25rem;
+	border-width: 1px;
+	border-color: currentColor;
+	border-radius: 0.5rem;
+	width: 100%;
+}
+
+#calendar-header>#calendar-header-text {
+	text-align: center;
+	width: 100%;
+}
+
+#calendar-header>#calendar-header-text>#calendar-name-header {
+	font-size: 1.5rem;
+	line-height: 2rem;
+	font-weight: bold;
+}
+
+#calendar-header>#calendar-header-logo {
+	height: 100%;
+	width: 6rem;
+}
+
+#current-time {
+	margin-bottom: 0.5rem;
+	font-size: 1.125rem;
+	line-height: 1.75rem;
+	font-style: italic;
+}
+
+#calendar-selection {
+	display: block;
+	border-width: 1px;
+	border-radius: 0.5rem;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	padding: 0.625rem;
+	width: 100%;
+
+}
+
+#calendar {
+	flex-grow: 1;
+	border-radius: 0.5rem;
+	text-align: center;
+	width: 100%;
+}
+
+#calendar .event-day {
+	width: 100%;
+}
+
+#calendar .event-day-header {
+	background-color: var(--event-day-background-color);
+	color: var(--event-day-text-color);
+	font-size: 1.125rem;
+	line-height: 1.75rem;
+	border-top-left-radius: 0.5rem;
+	border-top-right-radius: 0.5rem;
+	margin-top: 1rem;
+	padding: 0.25rem;
+	text-align: left;
+	width: 50%;
+	font-weight: 600;
+
+}
+
+#calendar .cal-event:first-of-type {
+	border-top-right-radius: 0.5rem;
+
+}
+
+#calendar .cal-event:last-of-type {
+	border-bottom-right-radius: 0.5rem;
+	border-bottom-left-radius: 0.5rem
+}
+
+#calendar .cal-event {
+	display: flex;
+	align-items: center;
+	border-width: 1px;
+	border-color: currentColor;
+	padding: 0.5rem;
+	background-color: var(--event-background-color);
+	color: var(--event-text-color)
+}
+
+#calendar .cal-event.event-past {
+	opacity: 0.8;
+}
+
+#calendar .cal-event.event-current {
+	font-weight: bold;
+}
+
+#calendar .cal-times {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-right-width: 2px;
+	border-color: currentColor;
+	margin-right: 0.5rem;
+	padding-right: 0.5rem;
+	min-width: max-content;
+	width: 11rem;
+
+
+}
+
+#calendar .cal-info,
+#calendar .cal-summary {
+	text-align: left;
+	max-width: 31rem;
+	/* will make [...] at the end */
+	text-overflow: ellipsis;
+	/* paragraph to one line */
+	white-space: nowrap;
+	/* older browsers */
+	overflow: hidden;
+}
+
+#calendar .cal-start {
+	font-size: 1.25rem;
+	line-height: 1.75rem;
+}
+
+#calendar .cal-end {
+	font-size: 1.25rem;
+	line-height: 1.75rem;
+}
+
+#event-header {
+	font-size: 1.875rem;
+	line-height: 2.25rem;
+}
+
+#weather {
+	position: fixed;
+	bottom: -0px;
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	border-top-width: 1px;
+	border-color: currentColor;
+	border-top-left-radius: 0.5rem;
+	border-top-right-radius: 0.5rem;
+	height: fit-content;
+	max-height: 25vh;
+	width: 100%;
+}
+
+#weather .weather-group {
+	display: flex;
+	flex-direction: column;
+	border-width: 1px;
+	border-color: currentColor;
+}
+
+#weather .weather-group h5 {
+	width: 100%;
+	text-align: center;
+}
+
+#weather .weather-group .weather-information {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	font-size: 0.75rem;
+	line-height: 1rem;
+}
+
+#weather .weather-group .weather-information>* {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+#weather .weather-group img {
+	height: 1rem;
+	width: 1rem;
+}
+
+#weather .weather-period {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	padding: .5rem;
+}
+
+#weather .weather-day {
+	background-color: var(--weather-day-background-color);
+	color: var(--weather-day-text-color);
+}
+
+#weather .weather-night {
+	background-color: var(--weather-night-background-color);
+	color: var(--weather-night-text-color);
+}
+
+table,
+th,
+td {
+	border-width: 1px;
+	border-color: currentColor;
+}
