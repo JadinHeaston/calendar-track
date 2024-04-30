@@ -13,7 +13,7 @@ $versionedFiles = array(
 
 foreach ($versionedFiles as $fileName => $hash)
 {
-	$versionedFiles[$fileName] = substr(md5(filemtime(__DIR__ . $fileName)), 0, 6);
+	$versionedFiles[$fileName] = substr(md5(filemtime($fileName)), 0, 6);
 }
 
 $appRoot = APP_ROOT;
