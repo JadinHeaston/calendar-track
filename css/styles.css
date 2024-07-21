@@ -211,6 +211,8 @@ iframe.tiles {
 #weather .weather-group h5 {
 	width: 100%;
 	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #weather .weather-group .weather-information {
