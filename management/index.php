@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if (session_status() !== PHP_SESSION_ACTIVE)
 	session_start();
 require_once(__DIR__ . '/../includes/loader.php');
@@ -6,7 +10,7 @@ require_once(__DIR__ . '/../includes/loader.php');
 require_once(__DIR__ . '/../templates/header.php');
 
 echo <<<HTML
-	<main>
+	<main id="management">
 	HTML;
 
 if ($_SESSION['authenticated'] !== true)
@@ -37,31 +41,29 @@ if ($_SESSION['authenticated'] !== true)
 		HTML;
 	}
 }
-
-if ($_SESSION['authenticated'] === true)
+elseif ($_SESSION['authenticated'] === true)
 {
-	//Catch for no ID, eventually giving all calendars.
-	if (!isset($_GET['id']))
-		$_GET['id'] = 0;
+	if (isset($_GET['id']) === false)
+		$_GET['id'] = [];
 
-	//Getting all calendars.
-	$calendars = $connection->getCalendar(intval($_GET['id']));
-	if ($calendars === false || empty($calendars))
+	if (isset($_GET['action']) && $_GET['action'] !== '' && isset($_GET['id']))
 	{
-		echo 'No calendars found. :(';
-		exit();
-	}
+		//Getting calendar.
+		$calendar = $connection->getCalendar([intval($_GET['id'])]);
+		if ($calendar === false || empty($calendar))
+		{
+			echo 'No calendar found. :(';
+			exit();
+		}
+		$calendar = $calendar[0];
 
-	if (isset($_GET['action']) && $_GET['action'] !== '' && count($calendars) === 1)
-	{
-		$calendar = $calendars[0];
-		unset($calendars);
-
+		echo 'ayo';
 		if (strtolower($_GET['action']) === 'view')
 		{
 			echo <<<HTML
 				<tr>
 					<td>{$calendar['name']}</td>
+					<td>{$calendar['enable_weather']}</td>
 					<td>[HIDDEN]</td>
 					<td class="text-center"><a href="?action=edit&id={$calendar['id']}" hx-get="?action=edit&id={$calendar['id']}" hx-select="tr" hx-target="closest tr" hx-swap="outerHTML">Edit</a></td>
 				</tr>
@@ -71,8 +73,9 @@ if ($_SESSION['authenticated'] === true)
 		{
 			echo <<<HTML
 				<tr>
-					<td><input type="text" value=""></td>
-					<td><input type="text" value=""></td>
+					<td><input type="text" value="{$calendar['name']}"></td>
+					<td><input type="checkbox" value=""></td>
+					<td><input type="text" value="" placeholder="{REDACTED}"></td>
 					<td class="text-center"><a href="?action=save&id={$calendar['id']}" hx-get="?action=save&id={$calendar['id']}" hx-select="tr" hx-target="closest tr" hx-swap="outerHTML">Save</a> | <a href="?action=view&id={$calendar['id']}" hx-get="?action=view&id={$calendar['id']}" hx-select="tr" hx-target="closest tr" hx-swap="outerHTML">Cancel</a></td>
 				</tr>
 				HTML;
@@ -96,15 +99,15 @@ if ($_SESSION['authenticated'] === true)
 			if ($calendarKey === 'id')
 				continue;
 			$calendarKey = ucwords(str_replace('_', ' ', $calendarKey));
-			$tableHeaders .= <<<TABLE_HEADER
+			$tableHeaders .= <<<HTML
 				<th>{$calendarKey}</th>
-				TABLE_HEADER;
+				HTML;
 		}
 
-		$tableHeaders .= <<<TABLE_HEADER
-		<th>Ics Link</th>
-		<th>Action</th>
-		TABLE_HEADER;
+		$tableHeaders .= <<<HTML
+			<th>Ics Link</th>
+			<th>Action</th>
+			HTML;
 
 
 		$tableRows = '';
@@ -113,18 +116,19 @@ if ($_SESSION['authenticated'] === true)
 		{
 			if ($calendarKey === 'id')
 				continue;
-			$tableRows .= <<<TABLE_ROW
+			$tableRows .= <<<HTML
 				<tr>
 					<td>{$calendar['name']}</td>
+					<td>{$calendar['enable_weather']}</td>
 					<td>[HIDDEN]</td>
-					<td class="text-center"><a href="?action=edit&id={$calendar['id']}" hx-get="?action=edit&id={$calendar['id']}" hx-select="tr" hx-target="closest tr" hx-swap="outerHTML">Edit</a></td>
+					<td><a href="?action=edit&id={$calendar['id']}" hx-get="?action=edit&id={$calendar['id']}" hx-select="tr" hx-target="closest tr" hx-swap="outerHTML">Edit</a></td>
 				</tr>
-				TABLE_ROW;
+				HTML;
 		}
 
 		echo <<<HTML
-			<h2 class="w-full text-center text-2xl">Calendar Management</h2>
-			<table class="w-full">
+			<h2>Calendar Management</h2>
+			<table>
 				<thead>
 					<tr>
 						{$tableHeaders}
@@ -137,8 +141,10 @@ if ($_SESSION['authenticated'] === true)
 			HTML;
 	}
 }
-?>
 
-</main>
 
-<?php require_once(__DIR__ . '/../templates/footer.php'); ?>
+echo <<<HTML
+	</main>
+	HTML;
+
+require_once(__DIR__ . '/../templates/footer.php');

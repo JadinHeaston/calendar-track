@@ -3,8 +3,6 @@
 This is a barebones PHP application for use as a display in front of a conference rooms (we opted to use a Raspbery Pi (3 | Model B) behind a PoE powered monitor)  
 It was created with Google Calendar in mind, but should work for any calendar.
 
-
-
 ## Deployment
 
 Docker Compose is the recommended way to deploy the application.  
@@ -26,7 +24,6 @@ The order of parameters does not matter.
 | `id` \| `id[]`    | [X]      | integer (or array of integers) defining calendars that should be displayed. | Defines which calendars should be shown. The order in which values are passed determine how they will be shown.<br><br>**NOTE:** It is current not possible to                                                                                             |
 | force-weather     | []       | `1` \| `0`                                                                  | Bypasses the database setting for a given display. Ommitting the value falls back to the database setting (which is `0` by default).<br><br>**NOTE:** Weather must be enabled globally (via the `./includes/config.php` file) for this to have any effect. |
 | horizontal-tiling | []       | `1` \| `0`                                                                  | When using multiple calendars, this allows tiling to be done horizontally rather than vertically.                                                                                                                                                          |
-
 
 ### Weather
 
@@ -52,11 +49,10 @@ Singular Build: `npm run build`
 
 - Dev build
 	- `tsc --watch`  
-	- `npx tailwindcss -i ./css/tailwind.css -o ./css/tailwind_output.css --watch`
 
 ### The Stack
 
-[PHP](https://www.php.net/) + [htmx](https://htmx.org/) + [TailwindCSS](https://tailwindcss.com/) + [MariaDB](https://mariadb.com/)  
+[PHP](https://www.php.net/) + [htmx](https://htmx.org/) + [MariaDB](https://mariadb.com/)  
 (Plus [NGINX](https://nginx.org/) as a reverse proxy.)  
 (and [phpMyAdmin](https://www.phpmyadmin.net/) for ease of development.)
 
