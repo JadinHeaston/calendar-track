@@ -5,7 +5,6 @@ if (isHTMX())
 //Create version hashes based on last modified time.
 $versionedFiles = array(
 	__DIR__ . '/../assets/favicon.svg' => '',
-	__DIR__ . '/../css/tailwind_output.css' => '',
 	__DIR__ . '/../css/styles.css' => '',
 	__DIR__ . '/../js/scripts.js' => '',
 	__DIR__ . '/../vendor/htmx.min.js' => '',
@@ -112,7 +111,6 @@ echo <<<HTML
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		{$autoRefreshScript}
 		<link rel="icon" href="{$appRoot}assets/favicon.svg?v={$versionedFiles[__DIR__ . '/../assets/favicon.svg']}" type="image/svg+xml">
-		<link rel="stylesheet" href="{$appRoot}css/tailwind_output.css?v={$versionedFiles[__DIR__ . '/../css/tailwind_output.css']}">
 		<link rel="stylesheet" href="{$appRoot}css/styles.css?v={$versionedFiles[__DIR__ . '/../css/styles.css']}">
 		<script src="{$appRoot}js/scripts.js?v={$versionedFiles[__DIR__ . '/../js/scripts.js']}"></script>
 		<script src="{$appRoot}vendor/htmx.min.js?v={$versionedFiles[__DIR__ . '/../vendor/htmx.min.js']}"></script>
