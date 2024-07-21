@@ -29,8 +29,8 @@ The order of parameters does not matter.
 
 Weather is provided by the [National Oceanic and Atmospheric Administration](https://www.weather.gov/documentation/services-web-api) (api.weather.gov)
 
-Use `https://api.weather.gov/points/LAT,LONG` to find Weather Grid information.
-	- The lat and long go to a precision of 4.
+- Use `https://api.weather.gov/points/LAT,LONG` to find Weather Grid information.
+  - The lat and long go to a precision of 4.
   
 By default, this is disabled globally within the `./includes/config.php` file.
 
@@ -45,10 +45,8 @@ This ICS is parsed by [PHP ICS Parser](https://github.com/u01jmg3/ics-parser) wh
 
 ### Build
 
-Singular Build: `npm run build`
-
-- Dev build
-	- `tsc --watch`  
+- Build
+  - `tsc --watch`  
 
 ### The Stack
 
@@ -67,8 +65,8 @@ No vendor work was modified, and all licensing is handled by the respective proj
 A copy of each license is also avaiable in the [LICENSES](/LICENSES/) folder.
 
 - [htmx](https://htmx.org/) - Front-end interactivity.
-	- [BSD 2 Clause](https://opensource.org/license/bsd-2-clause/)
+  - [BSD 2 Clause](https://opensource.org/license/bsd-2-clause/)
 - [PHP ICS Parser](https://github.com/u01jmg3/ics-parser) - ICS Parsing and general handling.
-	- [MIT](https://opensource.org/license/mit/)
+  - [MIT](https://opensource.org/license/mit/)
 - [Remix Icon](https://github.com/Remix-Design/RemixIcon) - Icons used for favicon and weather portion.
-	- [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+  - [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
