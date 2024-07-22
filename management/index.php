@@ -9,6 +9,12 @@ require_once(__DIR__ . '/../includes/loader.php');
 
 require_once(__DIR__ . '/../templates/header.php');
 
+if (empty(CALENDAR_MANAGEMENT_PASSWORD_HASH))
+{
+	echo 'Management disabled. Please set a management password.';
+	die(1);
+}
+
 echo <<<HTML
 	<main id="management">
 	HTML;
