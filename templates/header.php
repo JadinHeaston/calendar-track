@@ -3,17 +3,14 @@ if (isHTMX())
 	return;
 
 //Create version hashes based on last modified time.
-$versionedFiles = array(
-	__DIR__ . '/../assets/favicon.svg' => '',
-	__DIR__ . '/../css/styles.css' => '',
-	__DIR__ . '/../js/scripts.js' => '',
-	__DIR__ . '/../vendor/htmx.min.js' => '',
+$versionedFiles = versionedFiles(
+	array(
+		__DIR__ . '/../assets/favicon.svg',
+		__DIR__ . '/../css/styles.css',
+		__DIR__ . '/../js/scripts.js',
+		__DIR__ . '/../vendor/htmx.min.js',
+	)
 );
-
-foreach ($versionedFiles as $fileName => $hash)
-{
-	$versionedFiles[$fileName] = substr(md5(filemtime($fileName)), 0, 6);
-}
 
 $appRoot = APP_ROOT;
 $autoRefreshScript = '';
@@ -110,10 +107,10 @@ echo <<<HTML
 		<title>Calendar Track</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		{$autoRefreshScript}
-		<link rel="icon" href="{$appRoot}assets/favicon.svg?v={$versionedFiles[__DIR__ . '/../assets/favicon.svg']}" type="image/svg+xml">
-		<link rel="stylesheet" href="{$appRoot}css/styles.css?v={$versionedFiles[__DIR__ . '/../css/styles.css']}">
-		<script src="{$appRoot}js/scripts.js?v={$versionedFiles[__DIR__ . '/../js/scripts.js']}"></script>
-		<script src="{$appRoot}vendor/htmx.min.js?v={$versionedFiles[__DIR__ . '/../vendor/htmx.min.js']}"></script>
+		<link rel="icon" href="{$appRoot}assets/favicon.svg?v={$versionedFiles[__DIR__ . '/../assets/favicon.svg']['version']}" type="image/svg+xml" integrity="{$versionedFiles[__DIR__ . '/../assets/favicon.svg']['integrity']}">
+		<link rel="stylesheet" href="{$appRoot}css/styles.css?v={$versionedFiles[__DIR__ . '/../css/styles.css']['version']}" integrity="{$versionedFiles[__DIR__ . '/../css/styles.css']['integrity']}">
+		<script src="{$appRoot}js/scripts.js?v={$versionedFiles[__DIR__ . '/../js/scripts.js']['version']}" integrity="{$versionedFiles[__DIR__ . '/../js/scripts.js']['integrity']}"></script>
+		<script src="{$appRoot}vendor/htmx.min.js?v={$versionedFiles[__DIR__ . '/../vendor/htmx.min.js']['version']}" integrity="{$versionedFiles[__DIR__ . '/../vendor/htmx.min.js']['integrity']}"></script>
 		<style>
 			:root {
 				--main-background-color: {$mainBackgroundColor};
