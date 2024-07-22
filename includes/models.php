@@ -253,7 +253,7 @@ class CTConnector extends DatabaseConnector
 	{
 		$query = 'SELECT id, name, enable_weather' . ($includeICS === true ? ', ics_link' : '') . ' FROM calendar WHERE active = TRUE';
 		$params = [];
-		if (count($calendarIDs) > 0)
+		if (empty($calendarIDs) === false)
 		{
 			$query .= ' AND id IN (' . implode(',', array_fill(0, count($calendarIDs), '?')) . ')';
 			$params = $calendarIDs;

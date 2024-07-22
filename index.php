@@ -112,7 +112,7 @@ elseif (count($allIDs) === 1)
 		{
 			//Starting new container and displaying day header.
 			$currentDay = $dtstart->format('Y-m-d');
-			if ($key > 0)
+			if (empty($key) === false)
 			{
 				//Closing previous event-day containers.
 				echo <<<HTML
@@ -147,7 +147,7 @@ elseif (count($allIDs) === 1)
 			HTML;
 	}
 
-	if (!empty($events))
+	if (empty($events) === false)
 	{
 		//Closing last event-day container.
 		echo <<<HTML

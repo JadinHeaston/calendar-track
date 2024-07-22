@@ -13,7 +13,7 @@ function errorHandler($severity, $message, $file, $line)
 			$argList = '';
 			foreach ($trace['args'] as $key => $arg)
 			{
-				if ($key > 0)
+				if (empty($key) !== false)
 					$argList .= ', ';
 				if (is_string($arg))
 					$argList .= '"' . $arg . '"';
