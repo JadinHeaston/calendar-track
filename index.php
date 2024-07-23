@@ -208,7 +208,7 @@ function generateWeatherDiv(int $id, string $forceWeatherFlagHTML): string
 {
 	return <<<HTML
 		<div id="weather" hx-trigger="load queue:none" hx-get="weather.php?id={$id}{$forceWeatherFlagHTML}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
-			<h3 id="weather-header">Weather</h3>
+			<h3 id="weather-header"></h3>
 		</div>
 		HTML;
 }
