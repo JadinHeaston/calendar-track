@@ -104,6 +104,8 @@ function parseWeatherData(object $weatherData): string
 		else
 			$iconFileName = $weatherIcons[$time]['default'];
 
+		//Formatting percipitation chance.
+		$precipitationChance = intval($weatherPeriod->probabilityOfPrecipitation->value);
 		// //Formatting temperature trend.
 		// if ($weatherPeriod->temperatureTrend === null)
 		// 	$weatherPeriod->temperatureTrend = '';
@@ -122,7 +124,7 @@ function parseWeatherData(object $weatherData): string
 						{$weatherPeriod->temperature}</div>
 					<div title="Humidity" class="weather-humidity">
 						<img class="weather-humidity-icon" src="{$appRoot}assets/weather/water-percent-line.svg"/>
-						{$weatherPeriod->relativeHumidity->value}%
+						{$precipitationChance}%
 					</div>
 					<div title="Wind" class="weather-wind">
 						<img class="weather-wind-icon" src="{$appRoot}assets/weather/windy-line.svg"/>
