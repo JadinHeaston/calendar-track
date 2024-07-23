@@ -170,7 +170,7 @@ if ($manualWeatherFlag !== null)
 	$weatherFlagHTML = '&force-weather=' . $manualWeatherFlag;
 else
 	$weatherFlagHTML = '';
-$currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properties->updated));
+// $currentUpdateTime = Date(UI_DATE_GROUP_HEADER, strtotime($weatherData->properties->updated));
 
 echo <<<HTML
 	<div id="weather" hx-trigger="click queue:none, every {$weatherUpdateRate}s queue:none" hx-get="weather.php?id={$id}{$weatherFlagHTML}{$recoveryURLParamter}" hx-select="#weather" hx-target="#weather" hx-swap="outerHTML">
