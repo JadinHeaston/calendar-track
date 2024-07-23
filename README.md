@@ -15,15 +15,24 @@ I will eventually host a proper [dockerhub](https://hub.docker.com/) image, but 
 3. Copy `./includes/config.example.php` to `./includes/config.php` and edit as necessary.
 4. Copy either `php-development` or `php-production` as needed as `php.ini` in the `./docker/php/` folder. Edit as necessary.
 
+### Management
+
+Management can be handled through `/management/`.
+
+This area allows you to set the weather from the DB (which can be overwritten via URL parameters), update the visible name, and update the ICS link.  
+**Note:** The ICS link is never visible to the end-user, even within the management area. If you don't know what the current ICS link is for a given calendar either set it or check the database directly. :)
+
+- The environment variable `CALENDAR_MANAGEMENT_PASSWORD_HASH` must be set. The management area will be disabled if this is empty.
+
 ### Parameters
 
 The order of parameters does not matter.
 
-| key               | required | value options                                                               | description                                                                                                                                                                                                                                                |
-| ----------------- | -------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id` \| `id[]`    | [X]      | integer (or array of integers) defining calendars that should be displayed. | Defines which calendars should be shown. The order in which values are passed determine how they will be shown.<br><br>**NOTE:** It is current not possible to                                                                                             |
-| force-weather     | []       | `1` \| `0`                                                                  | Bypasses the database setting for a given display. Ommitting the value falls back to the database setting (which is `0` by default).<br><br>**NOTE:** Weather must be enabled globally (via the `./includes/config.php` file) for this to have any effect. |
-| horizontal-tiling | []       | `1` \| `0`                                                                  | When using multiple calendars, this allows tiling to be done horizontally rather than vertically.                                                                                                                                                          |
+| key               | required | value options                                                   | description                                                                                                                                                                                                                                                |
+| ----------------- | -------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id[]              | [X]      | Integers defining the ID of calendars that should be displayed. | Defines which calendars should be shown. This parameter can be passed multiple times in a given URL to show multiple calendars. The order in which values are passed determine how they will be shown.                                                                                                                                            |
+| force-weather     | []       | `1` \| `0`                                                      | Bypasses the database setting for a given display. Ommitting the value falls back to the database setting (which is `0` by default).<br><br>**NOTE:** Weather must be enabled globally (via the `./includes/config.php` file) for this to have any effect. |
+| horizontal-tiling | []       | `1` \| `0`                                                      | When using multiple calendars, this allows tiling to be done horizontally rather than vertically.                                                                                                                                                          |
 
 ### Weather
 

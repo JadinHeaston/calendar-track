@@ -282,20 +282,34 @@ class CTConnector extends DatabaseConnector
 			return false;
 	}
 
-	public function editCalendarName(int $calendarID, string $newName, string $newICSLink)
+	public function newCalendar(string $name, int $enableWeather, string $icsLink)
 	{
-		$result = $this->executeStatement('UPDATE calendar SET name = ?, ics_link = ? WHERE id = ?', [htmlspecialchars($newName), $newICSLink, $calendarID]);
+		$result = $this->executeStatement('INSERT INTO calendar (name, enable_weather, ics_link) VALUES (?, ?, ?)', [$name, $enableWeather, $icsLink]);
 		if ($result !== false)
-			return true;
+			return $this->getLastInsertID();
 		else
 			return false;
 	}
 
-	public function addCalendar(string $name, string $icsLink)
+	public function saveCalendar(int $calendarID, string $name = '', int $enableWeather = null, string $icsLink = '')
 	{
-		$result = $this->executeStatement('INSERT INTO calendar (name, ics_link) VALUES (?, ?)', [htmlspecialchars($name), $icsLink]);
+		$query = 'UPDATE calendar SET name = ?, enable_weather = ?,';
+		$params = [$name, $enableWeather];
+
+		if ($icsLink !== '')
+		{
+			$query .= ' ics_link = ?,';
+			$params[] = $icsLink;
+		}
+
+		$query = rtrim($query, ','); //Removing trailing comma.
+		$params[] = $calendarID;
+
+		$query .= ' WHERE ID = ?'; //Adding ID.
+
+		$result = $this->executeStatement($query, $params);
 		if ($result !== false)
-			return $this->getLastInsertID();
+			return true;
 		else
 			return false;
 	}
