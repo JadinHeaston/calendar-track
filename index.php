@@ -103,6 +103,8 @@ elseif (count($allIDs) === 1)
 	 */
 	foreach ($events as $key => &$event)
 	{
+		if (UI_EVENT_HIDE_PRIVATE === true && isEventPrivate($event) === true)
+			continue;
 		$dtstart = $icalFunctions->iCalDateToDateTime($event->dtstart_array[3]);
 		$dtend = $icalFunctions->iCalDateToDateTime($event->dtend_array[3]);
 		$dtend->setTimezone(new DateTimeZone(date_default_timezone_get()));
@@ -135,6 +137,10 @@ elseif (count($allIDs) === 1)
 			$eventStatus = 'event-past';
 		else
 			$eventStatus = 'event-future';
+
+		if (UI_EVENT_OBSCURE_PRIVATE === true && isEventPrivate($event) === true)
+			$event->summary = UI_EVENT_OBSCURE_PRIVATE_TEXT;
+
 		echo <<<HTML
 			<div class="cal-event {$eventStatus}">
 				<div class="cal-times">

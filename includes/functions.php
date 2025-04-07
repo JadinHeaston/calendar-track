@@ -111,3 +111,8 @@ function versionedFiles(array $filePaths, int $versionLength = 6, string $hash =
 	}
 	return $output;
 }
+
+function isEventPrivate(\ICal\Event $event): bool
+{
+	return (isset($event->additionalProperties['class']) && $event->additionalProperties['class'] === 'PRIVATE');
+}
