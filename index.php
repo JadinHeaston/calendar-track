@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once(__DIR__ . '/includes/loader.php');
 
 if (isset($_GET['id']) && is_array($_GET['id']))
@@ -76,10 +80,7 @@ elseif (count($allIDs) === 1)
 
 	$events = getICSEventData(intval($calendar['id']), $calendar['ics_link']);
 	if ($events === false)
-	{
-		echo 'Failed to get events.';
-		die();
-	}
+		exit('Failed to get events.');
 	$eventsLastUpdatedTime = getCachedICSLastModificationTime(intval($calendar['id']));
 	unset($calendar); //Unsetting calendar ASAP to drop memory usage. All relavent events have been retrieved.
 	//Calendar
@@ -106,7 +107,11 @@ elseif (count($allIDs) === 1)
 		if (UI_EVENT_HIDE_PRIVATE === true && isEventPrivate($event) === true)
 			continue;
 		$dtstart = $icalFunctions->iCalDateToDateTime($event->dtstart_array[3]);
+		if ($dtstart === false)
+			continue;
 		$dtend = $icalFunctions->iCalDateToDateTime($event->dtend_array[3]);
+		if ($dtend === false)
+			continue;
 		$dtend->setTimezone(new DateTimeZone(date_default_timezone_get()));
 		$dtstart->setTimezone(new DateTimeZone(date_default_timezone_get()));
 

@@ -72,9 +72,7 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
 		if ($action === 'delete')
 		{
 			if ($connection->removeCalendar($calendar['id']) === true)
-			{
 				echo generateCalendarRow($calendar, 'deleted');
-			}
 		}
 		elseif (in_array($action, ['new', 'save'], true))
 		{
@@ -95,18 +93,12 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
 			{
 				$_GET['id'] = $connection->newCalendar($calendar['name'], $calendar['enable_weather'], $calendar['ics_link']);
 				if ($_GET['id'] === false)
-				{
-					echo 'ERROR ADDING NEW CALENDAR!!!';
-					exit(1);
-				}
+					exit('ERROR ADDING NEW CALENDAR!!!');
 			}
 			elseif ($action === 'save')
 			{
 				if ($connection->saveCalendar($calendar['id'], $calendar['name'], $calendar['enable_weather'], $calendar['ics_link']) === false)
-				{
-					echo 'ERROR SAVING!!!';
-					exit(1);
-				}
+					exit('ERROR SAVING!!!');
 			}
 			$calendar = $connection->getCalendar([intval($_GET['id'])]);
 			$calendar = $calendar[0]; //Updating calendar from database.
@@ -116,9 +108,7 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
 				$action = 'added';
 			}
 			else
-			{
 				$action = 'view';
-			}
 		}
 		echo generateCalendarRow($calendar, $action);
 	}
@@ -127,10 +117,7 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
 		//Getting all calendars.
 		$calendars = $connection->getCalendar();
 		if ($calendars === false || empty($calendars))
-		{
-			echo 'No calendars found. :(';
-			exit();
-		}
+			exit('No calendars found. :(');
 		$tableHeaders = '';
 		foreach (array_keys($calendars[0]) as $calendarKey)
 		{
