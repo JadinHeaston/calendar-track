@@ -49,6 +49,9 @@ define('UI_DATE_GROUP_HEADER', 'h:i:s A - l, F dS');
 ////////Events
 define('UI_DATE_EVENT_HEADER', 'l - jS F o');
 define('UI_DATE_EVENT_TIME', 'g:i A');
+define('UI_EVENT_OBSCURE_PRIVATE', true); //Determines if private event summary is shown.
+define('UI_EVENT_OBSCURE_PRIVATE_TEXT', '*PRIVATE*'); //Replacement text for obscured private events.
+define('UI_EVENT_HIDE_PRIVATE', false); //Determines if private events are shown on the calendar at all.
 ////Weather
 define('WEATHER_ENABLE', false); //Globally toggle weather.
 define('WEATHER_GRID_ID', 'LSX');
