@@ -2,7 +2,7 @@
 //Configuration
 define('APP_ROOT', '/');
 ////Calendar Management
-define('CALENDAR_MANAGEMENT_PASSWORD_HASH', '113ea2fd2a5fb8dcc820ebfd29dce70cd3bb2aad6ac4bc6d8df51f03237356ede1ec1cfb9591029d0e65601215f609f967d63dba31ae5891809f64137c204a5e'); //"RANDOM_HASHED_PASSWORD"
+define('CALENDAR_MANAGEMENT_PASSWORD_HASH', ''); //Disabled
 define('CALENDAR_MANAGEMENT_HASH_ALGORITHM', 'sha512'); //https://www.php.net/manual/en/function.hash-algos.php
 ////Database
 define('DB_HOST', 'ct-mariadb');
