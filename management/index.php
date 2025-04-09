@@ -76,7 +76,6 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
 			if (isset($_POST['name']))
 				$calendar['name'] = trim($_POST['name']);
 
-			var_dump($_POST);
 			if (isset($_POST['enable_weather']))
 				$calendar['enable_weather'] = 1;
 			else
