@@ -10,10 +10,7 @@ require_once(__DIR__ . '/../includes/loader.php');
 require_once(__DIR__ . '/../templates/header.php');
 
 if (empty(CALENDAR_MANAGEMENT_PASSWORD_HASH))
-{
-	echo 'Management disabled. Please set a management password.';
-	die(1);
-}
+	die('Management disabled. Please set a management password.');
 
 if (isHTMX() === false)
 {
@@ -26,12 +23,12 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true)
 	//If they are posting a password, check that against
 	if (isset($_POST['calendar_edit_password']))
 	{
-		if (hash(CALENDAR_MANAGEMENT_HASH_ALGORITHM, $_POST['calendar_edit_password']) === CALENDAR_MANAGEMENT_PASSWORD_HASH)
+		if (password_verify($_POST['calendar_edit_password'], CALENDAR_MANAGEMENT_PASSWORD_HASH) === true)
 			$_SESSION['authenticated'] = true;
 		else
 		{
 			echo <<<HTML
-				Incorrect Password.
+				Incorrect Password. :)
 				HTML;
 		}
 	}
@@ -44,8 +41,11 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true)
 		<form method="post" action="">
 			<label for="calendar_edit_password">Calendar Edit Password</label>
 			<input type="password" id="calendar_edit_password" name="calendar_edit_password" placeholder="Password">
-			<input type="submit">
+			<button type="submit">Submit</button>
+			<button type="submit" hx-post="hash_generator.php" hx-target="#hash-output">Hash</button>
 		</form>
+
+		<div id="hash-output"></div>
 		HTML;
 	}
 }
@@ -62,10 +62,7 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
 			//Getting calendar.
 			$calendar = $connection->getCalendar([intval($_GET['id'])]);
 			if ($calendar === false || empty($calendar))
-			{
-				echo 'No calendar found. :(';
-				exit();
-			}
+				exit('No calendar found. :(');
 			$calendar = $calendar[0];
 		}
 
@@ -79,8 +76,9 @@ if (isset($_SESSION['authenticated']) && $_SESSION['authenticated'] === true)
 			if (isset($_POST['name']))
 				$calendar['name'] = trim($_POST['name']);
 
+			var_dump($_POST);
 			if (isset($_POST['enable_weather']))
-				$calendar['enable_weather'] = intval($_POST['enable_weather']);
+				$calendar['enable_weather'] = 1;
 			else
 				$calendar['enable_weather'] = 0;
 
@@ -168,16 +166,12 @@ function generateCalendarRow(array $calendar, string $type = 'view'): string
 	if (in_array($type, ['added', 'view'], true))
 	{
 		if ($type === 'added')
-		{
 			$class = 'added';
-		}
 		else
-		{
 			$class = '';
-		}
 		$calendar['enable_weather'] = ($calendar['enable_weather'] === 1 ? 'ON' : 'OFF');
 		return <<<HTML
-			<tr class="{$class}">
+			<tr class="{$class}" hx-include="this">
 				<td class="center">
 					{$calendar['id']}
 				</td>
@@ -199,21 +193,21 @@ function generateCalendarRow(array $calendar, string $type = 'view'): string
 	elseif ($type === 'new')
 	{
 		return <<<HTML
-			<tr hx-include="input">
+			<tr hx-include="this">
 				<td class="center">
 					N/A
 				</td>
 				<td>
 					<div class="input-container">
-						<input type="text" hx-validate="true" name="name" value="" placeholder="A Friendly Public Calendar Name" maxlength="255">
+						<input type="text" hx-validate="true" name="name" placeholder="A Friendly Public Calendar Name" maxlength="255" required>
 					</div>
 				</td>
 				<td class="center">
-					<input type="checkbox" hx-validate="true" name="enable_weather" value="1" checked>
+					<input type="checkbox" hx-validate="true" name="enable_weather" checked>
 				</td>
 				<td>
 					<div class="input-container">
-						<input type="password" hx-validate="true" value="" name="ics_link" placeholder="[HIDDEN]">
+						<input type="password" hx-validate="true" name="ics_link" placeholder="[HIDDEN]" required>
 					</div>
 				</td>
 				<td class="center">
@@ -226,17 +220,17 @@ function generateCalendarRow(array $calendar, string $type = 'view'): string
 	{
 		$checkedStatus = (boolval($calendar['enable_weather']) === true ? ' checked' : '');
 		return <<<HTML
-			<tr hx-include="input">
+			<tr hx-include="this">
 				<td class="center">
 					{$calendar['id']}
 				</td>
 				<td>
 					<div class="input-container">
-						<input type="text" name="name" value="{$calendar['name']}" placeholder="A Friendly Public Calendar Name" maxlength="255">
+						<input type="text" name="name" value="{$calendar['name']}" placeholder="A Friendly Public Calendar Name" maxlength="255" required>
 					</div>
 				</td>
 				<td class="center">
-					<input type="checkbox" name="enable_weather" value="1"{$checkedStatus}>
+					<input type="checkbox" name="enable_weather" {$checkedStatus}>
 				</td>
 				<td>
 					<div class="input-container">

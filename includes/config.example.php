@@ -2,8 +2,12 @@
 //Configuration
 define('APP_ROOT', '/');
 ////Calendar Management
-define('CALENDAR_MANAGEMENT_PASSWORD_HASH', ''); //Disabled
-define('CALENDAR_MANAGEMENT_HASH_ALGORITHM', 'sha512'); //https://www.php.net/manual/en/function.hash-algos.php
+define('CALENDAR_MANAGEMENT_PASSWORD_HASH', ''); //Disabled - https://argon2.online/
+define('CALENDAR_MANAGEMENT_PASSWORD_HASH_PARAMETERS', [
+	'memory_cost' => 2048,
+	'time_cost' => 4,
+	'threads' => 3
+]);
 ////Database
 define('DB_HOST', 'ct-mariadb');
 define('DB_USERNAME', '');
