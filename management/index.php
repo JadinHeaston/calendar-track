@@ -9,9 +9,6 @@ require_once(__DIR__ . '/../includes/loader.php');
 
 require_once(__DIR__ . '/../templates/header.php');
 
-if (empty(CALENDAR_MANAGEMENT_PASSWORD_HASH))
-	die('Management disabled. Please set a management password.');
-
 if (isHTMX() === false)
 {
 	echo <<<HTML
@@ -20,6 +17,9 @@ if (isHTMX() === false)
 }
 if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true)
 {
+	if (empty(CALENDAR_MANAGEMENT_PASSWORD_HASH))
+		die('Management disabled. Please set a management password.');
+	
 	//If they are posting a password, check that against
 	if (isset($_POST['calendar_edit_password']))
 	{
